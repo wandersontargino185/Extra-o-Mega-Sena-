@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Extrator de Números + Concurso - Mega-Sena</title>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 0 20px;
+            background-color: #f4f7fa;
+        }
+        h1 { color: #2c3e50; text-align: center; }
+        textarea {
+            width: 100%;
+            height: 250px;
+            padding: 10px;
+            font-size: 14px;
+            border: 2px solid #b0c4de;
+            border-radius: 8px;
+            background-color: #fff;
+            resize: vertical;
+        }
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin: 15px 0;
+            flex-wrap: wrap;
+        }
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.2s;
+            color: #fff;
+        }
+        button.extrair { background-color: #e67e22; }
+        button.extrair:hover { background-color: #d35400; }
+        button.download { background-color: #27ae60; }
+        button.download:hover { background-color: #1e8449; }
+        button.reset { background-color: #e74c3c; }
+        button.reset:hover { background-color: #b03a2e; }
+        .result-area {
+            background-color: #ecf0f1;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+            border: 1px solid #bdc3c7;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .result-area h3 { margin-top: 0; color: #2c3e50; }
+        .result-area pre {
+            white-space: pre-wrap;
+            word-break: break-all;
+            background: #fff;
+            padding: 10px;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .stats { font-weight: bold; color: #2c3e50; }
+        .aviso {
+            background: #fef9e7;
+            border-left: 4px solid #f1c40f;
+            padding: 8px 12px;
+            margin: 10px 0;
+            font-size: 14px;
+        }
+        .concurso-info {
+            background: #d5e8f0;
+            padding: 8px 12px;
+            border-radius: 6px;
+            margin: 8px 0;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>🎯 Extrator Mega-Sena (com Concurso)</h1>
+    <p>Cole o texto do resultado e clique em <strong>"Extrair"</strong>. A ferramenta localiza os 6 números e o número do concurso (se houver).</p>
+    <div class="aviso">
+        ⚡ Procura por padrões como "Concurso", "Sorteio", "Concurso nº", "#" seguido de número.
+    </div>
+
+    <textarea id="inputText" placeholder="Cole aqui o resultado da Mega-Sena... Exemplo:&#10;Concurso 3054 - 08/09/2026&#10;Números sorteados: 43 - 58 - 24 - 47 - 08 - 17"></textarea>
+
+    <div class="button-group">
+        <button class="extrair" onclick="extrairDados()">🔍 Extrair Números e Concurso</button>
+        <button class="download" onclick="baixarArquivo()" id="btnDownload" disabled>⬇️ Baixar .txt</button>
+        <button class="reset" onclick="limpar()">🗑️ Limpar</button>
+    </div>
+
+    <div class="result-area" id="resultArea" style="display:none;">
+        <h3>📋 Dados extraídos</h3>
+        <div id="stats" class="stats"></div>
+        <div id="concursoInfo" class="concurso-info"></div>
+        <pre id="resultContent"></pre>
+    </div>
+
+    <script>
+        // --------------------------------------------------------------
+        // 1. Extrai o número do concurso
+        // --------------------------------------------------------------
+        function extrairConcurso(texto) {
+            // Padrões: Concurso 3054, Concurso nº 3054, #3054, Sorteio 3054, etc.
+            const regex = /(?:Concurso|Sorteio|Concurso\s*n[º°]?|#)\s*(\d+)/i;
+            const match = texto.match(regex);
+            return match ? match[1] : null;
+        }
+
+        // --------------------------------------------------------------
+        // 2. Extrai todos os números de 1 a 60
+        // --------------------------------------------------------------
+        function extrairNumerosDoTexto(texto) {
+            const regex = /\b(0?[1-9]|[1-5][0-9]|60)\b/g;
+            const matches = [...texto.matchAll(regex)].map(m => m[0]);
+            return matches;
+        }
+
+        // --------------------------------------------------------------
+        // 3. Pega os 6 primeiros números (Mega-Sena)
+        // --------------------------------------------------------------
+        function extrairSena(texto) {
+            const todos = extrairNumerosDoTexto(texto);
+            return todos.slice(0, 6);
+        }
+
+        // --------------------------------------------------------------
+        // 4. Formata para exibição e arquivo
+        // --------------------------------------------------------------
+        function formatarParaArquivo(numeros, concurso) {
+            let partes = [];
+            if (concurso) partes.push(`Concurso ${concurso}`);
+            partes.push(numeros.join(' - '));
+            return partes.join(' - ');
+        }
+
+        // --------------------------------------------------------------
+        // 5. Ação principal
+        // --------------------------------------------------------------
+        let ultimosNumeros = [];
+        let ultimoConcurso = null;
+
+        function extrairDados() {
+            const texto = document.getElementById('inputText').value;
+            if (!texto.trim()) {
+                alert('Por favor, cole algum texto primeiro.');
+                return;
+            }
+
+            const numeros = extrairSena(texto);
+            const concurso = extrairConcurso(texto);
+            ultimosNumeros = numeros;
+            ultimoConcurso = concurso;
+
+            const resultArea = document.getElementById('resultArea');
+            const stats = document.getElementById('stats');
+            const concursoInfo = document.getElementById('concursoInfo');
+            const content = document.getElementById('resultContent');
+            const btnDownload = document.getElementById('btnDownload');
+
+            if (numeros.length === 0) {
+                stats.textContent = '❌ Nenhum número entre 01 e 60 foi encontrado.';
+                concursoInfo.textContent = '';
+                content.textContent = '';
+                resultArea.style.display = 'block';
+                btnDownload.disabled = true;
+                return;
+            }
+
+            // Exibe estatísticas
+            stats.textContent = `✅ ${numeros.length} número(s) extraído(s) (máx. 6).`;
+
+            // Concurso
+            if (concurso) {
+                concursoInfo.textContent = `🏷️ Concurso identificado: ${concurso}`;
+            } else {
+                concursoInfo.textContent = 'ℹ️ Nenhum número de concurso encontrado.';
+            }
+
+            // Conteúdo formatado
+            const formatado = formatarParaArquivo(numeros, concurso);
+            content.textContent = formatado;
+
+            resultArea.style.display = 'block';
+            btnDownload.disabled = false;
+        }
+
+        // --------------------------------------------------------------
+        // 6. Baixar arquivo .txt
+        // --------------------------------------------------------------
+        function baixarArquivo() {
+            if (!ultimosNumeros || ultimosNumeros.length === 0) {
+                alert('Nenhum número para baixar. Execute a extração primeiro.');
+                return;
+            }
+
+            const conteudo = formatarParaArquivo(ultimosNumeros, ultimoConcurso);
+            const blob = new Blob([conteudo], { type: 'text/plain;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+
+            // Nome do arquivo inclui concurso (se houver)
+            let nomeBase = 'mega_sena';
+            if (ultimoConcurso) nomeBase += `_concurso_${ultimoConcurso}`;
+            const now = new Date();
+            const dataStr = now.toISOString().slice(0,10).replace(/-/g, '');
+            link.download = `${nomeBase}_${dataStr}.txt`;
+
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        }
+
+        // --------------------------------------------------------------
+        // 7. Limpar
+        // --------------------------------------------------------------
+        function limpar() {
+            document.getElementById('inputText').value = '';
+            document.getElementById('resultArea').style.display = 'none';
+            document.getElementById('btnDownload').disabled = true;
+            ultimosNumeros = [];
+            ultimoConcurso = null;
+        }
+    </script>
+
+</body>
+</html>
