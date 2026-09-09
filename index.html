@@ -1,235 +1,928 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Extrator de Números + Concurso - Mega-Sena</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Estatísticas Mega-Sena</title>
     <style>
-        * { box-sizing: border-box; }
+        /* ── Reset e cores ── */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
         body {
-            font-family: Arial, sans-serif;
-            max-width: 800px;
-            margin: 30px auto;
-            padding: 0 20px;
-            background-color: #f4f7fa;
+            font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+            background: #f5f7fc;
+            color: #1e293b;
+            padding: 24px 16px;
         }
-        h1 { color: #2c3e50; text-align: center; }
-        textarea {
-            width: 100%;
-            height: 250px;
-            padding: 10px;
-            font-size: 14px;
-            border: 2px solid #b0c4de;
-            border-radius: 8px;
-            background-color: #fff;
-            resize: vertical;
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
         }
-        .button-group {
+
+        /* ── Cabeçalho ── */
+        header {
             display: flex;
-            gap: 10px;
-            margin: 15px 0;
             flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 28px;
+            gap: 12px;
         }
-        button {
-            padding: 10px 20px;
+        header h1 {
+            font-size: 1.9rem;
+            font-weight: 700;
+            background: linear-gradient(145deg, #1e3a5f, #0f2b44);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.5px;
+        }
+        header .badge {
+            background: #e9edf5;
+            padding: 6px 16px;
+            border-radius: 40px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #1e3a5f;
+        }
+
+        /* ── Cards ── */
+        .card {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 22px 24px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04), 0 2px 6px rgba(0, 20, 40, 0.04);
+            margin-bottom: 28px;
+            border: 1px solid #edf2f9;
+            transition: box-shadow 0.2s;
+        }
+        .card:hover {
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.06);
+        }
+        .card h2 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #0b2a44;
+        }
+        .card h2 small {
+            font-weight: 400;
+            font-size: 0.85rem;
+            color: #64748b;
+            margin-left: auto;
+        }
+
+        /* ── Grid ── */
+        .row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+        @media (max-width: 780px) {
+            .row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ── Formulários ── */
+        .form-inline {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 12px 10px;
+        }
+        .form-inline label {
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+        .form-inline input,
+        .form-inline select {
+            padding: 10px 14px;
+            border: 1.5px solid #dce3ef;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            background: #fafcff;
+            transition: 0.2s;
+            flex: 1 1 140px;
+            min-width: 80px;
+        }
+        .form-inline input:focus,
+        .form-inline select:focus {
+            outline: none;
+            border-color: #2e5a8a;
+            box-shadow: 0 0 0 3px rgba(46, 90, 138, 0.15);
+        }
+        .form-inline .num-input-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            flex: 2 1 300px;
+        }
+        .form-inline .num-input-group input {
+            flex: 1 1 50px;
+            min-width: 48px;
+            text-align: center;
+        }
+
+        /* ── Botões ── */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 22px;
             border: none;
-            border-radius: 6px;
-            font-size: 16px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.9rem;
             cursor: pointer;
             transition: 0.2s;
+            background: #eef2f8;
+            color: #1e3a5f;
+            gap: 6px;
+            white-space: nowrap;
+        }
+        .btn-primary {
+            background: #1e3a5f;
             color: #fff;
         }
-        button.extrair { background-color: #e67e22; }
-        button.extrair:hover { background-color: #d35400; }
-        button.download { background-color: #27ae60; }
-        button.download:hover { background-color: #1e8449; }
-        button.reset { background-color: #e74c3c; }
-        button.reset:hover { background-color: #b03a2e; }
-        .result-area {
-            background-color: #ecf0f1;
-            border-radius: 8px;
-            padding: 15px;
-            margin-top: 15px;
-            border: 1px solid #bdc3c7;
-            max-height: 400px;
+        .btn-primary:hover {
+            background: #143049;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 14px rgba(30, 58, 95, 0.25);
+        }
+        .btn-success {
+            background: #1f8b4c;
+            color: #fff;
+        }
+        .btn-success:hover {
+            background: #16733e;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 14px rgba(31, 139, 76, 0.25);
+        }
+        .btn-danger {
+            background: #b13e3e;
+            color: #fff;
+        }
+        .btn-danger:hover {
+            background: #942f2f;
+        }
+        .btn-outline {
+            background: transparent;
+            border: 1.5px solid #d0d9e8;
+        }
+        .btn-outline:hover {
+            background: #f0f4fe;
+            border-color: #a0b3cf;
+        }
+        .btn-sm {
+            padding: 6px 14px;
+            font-size: 0.8rem;
+        }
+        .btn:disabled {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        /* ── Tabelas ── */
+        .table-wrap {
+            overflow-x: auto;
+            margin-top: 10px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.92rem;
+        }
+        th {
+            text-align: left;
+            padding: 12px 10px 8px 0;
+            font-weight: 600;
+            color: #334e6e;
+            border-bottom: 2px solid #e2eaf5;
+        }
+        td {
+            padding: 8px 10px 8px 0;
+            border-bottom: 1px solid #eef3fa;
+        }
+        .number-badge {
+            display: inline-block;
+            min-width: 36px;
+            padding: 2px 8px;
+            border-radius: 30px;
+            background: #eef3fa;
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+        .number-badge.hot {
+            background: #fde7d9;
+            color: #b45a2a;
+        }
+        .number-badge.cold {
+            background: #d9e7f7;
+            color: #1f4b7a;
+        }
+        .stat-bar {
+            display: inline-block;
+            height: 8px;
+            border-radius: 20px;
+            background: #d3dfef;
+            margin-left: 6px;
+            min-width: 30px;
+        }
+        .stat-bar .fill {
+            height: 100%;
+            border-radius: 20px;
+            background: #2e5a8a;
+            transition: width 0.3s;
+        }
+
+        /* ── Lista de resultados ── */
+        .results-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px 14px;
+            margin: 8px 0 4px;
+            max-height: 220px;
             overflow-y: auto;
+            padding: 4px 2px;
         }
-        .result-area h3 { margin-top: 0; color: #2c3e50; }
-        .result-area pre {
-            white-space: pre-wrap;
-            word-break: break-all;
-            background: #fff;
-            padding: 10px;
-            border-radius: 4px;
-            font-size: 14px;
+        .results-list .result-chip {
+            background: #f0f5fe;
+            padding: 6px 16px 6px 14px;
+            border-radius: 40px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            border: 1px solid #e2eaf5;
         }
-        .stats { font-weight: bold; color: #2c3e50; }
-        .aviso {
-            background: #fef9e7;
-            border-left: 4px solid #f1c40f;
-            padding: 8px 12px;
-            margin: 10px 0;
-            font-size: 14px;
+        .results-list .result-chip .del {
+            cursor: pointer;
+            color: #a0b3cf;
+            font-weight: 700;
+            margin-left: 4px;
         }
-        .concurso-info {
-            background: #d5e8f0;
-            padding: 8px 12px;
-            border-radius: 6px;
+        .results-list .result-chip .del:hover {
+            color: #b13e3e;
+        }
+
+        /* ── Palpites ── */
+        .palpites-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 10px;
             margin: 8px 0;
+        }
+        .palpite-item {
+            background: #f9fbfe;
+            border-radius: 12px;
+            padding: 8px 12px;
+            border: 1px solid #e2eaf5;
+            font-size: 0.9rem;
+        }
+        .palpite-item .nums {
+            font-weight: 600;
+            color: #1e3a5f;
+        }
+        .comparativo-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .comparativo-item {
+            background: #f0f5fe;
+            border-radius: 12px;
+            padding: 8px 14px;
+            border: 1px solid #d0d9e8;
+            font-size: 0.9rem;
+        }
+        .acerto-count {
+            font-weight: 700;
+            color: #1f8b4c;
+            margin-left: 6px;
+        }
+
+        /* ── Misc ── */
+        .flex-between {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+        }
+        .mt-12 {
+            margin-top: 12px;
+        }
+        .text-muted {
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+        .tag {
+            display: inline-block;
+            background: #eef3fa;
+            padding: 2px 12px;
+            border-radius: 30px;
+            font-size: 0.8rem;
+        }
+        .gap-8 {
+            gap: 8px;
+        }
+        .flex-wrap {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        /* scroll */
+        ::-webkit-scrollbar {
+            width: 5px;
+            height: 5px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #eef3fa;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #bccbdf;
+            border-radius: 10px;
         }
     </style>
 </head>
 <body>
+<div class="container">
 
-    <h1>🎯 Extrator Mega-Sena (com Concurso)</h1>
-    <p>Cole o texto do resultado e clique em <strong>"Extrair"</strong>. A ferramenta localiza os 6 números e o número do concurso (se houver).</p>
-    <div class="aviso">
-        ⚡ Procura por padrões como "Concurso", "Sorteio", "Concurso nº", "#" seguido de número.
+    <header>
+        <h1>🎲 Mega-Sena · Estatísticas</h1>
+        <span class="badge">📊 v1.2 · com importação avançada</span>
+    </header>
+
+    <!-- ─── CADASTRO DE RESULTADOS ─── -->
+    <div class="card">
+        <h2>📥 Cadastrar resultado</h2>
+        <div class="form-inline">
+            <label>Concurso (opcional):</label>
+            <input type="text" id="concursoInput" placeholder="ex: 3054" style="flex:0.6;" />
+            <div class="num-input-group">
+                <input type="number" id="n1" min="1" max="60" placeholder="1" />
+                <input type="number" id="n2" min="1" max="60" placeholder="2" />
+                <input type="number" id="n3" min="1" max="60" placeholder="3" />
+                <input type="number" id="n4" min="1" max="60" placeholder="4" />
+                <input type="number" id="n5" min="1" max="60" placeholder="5" />
+                <input type="number" id="n6" min="1" max="60" placeholder="6" />
+            </div>
+            <button class="btn btn-success" id="addResultBtn">Adicionar</button>
+            <button class="btn btn-outline btn-sm" id="clearAllBtn">🗑️ Zerar tudo</button>
+        </div>
+        <div style="margin-top: 10px; display: flex; flex-wrap: wrap; gap: 6px 14px;">
+            <span class="text-muted">Total de sorteios: <strong id="totalDraws">0</strong></span>
+            <span class="text-muted">Último: <span id="lastDraw">—</span></span>
+        </div>
+        <div class="results-list" id="resultsList"></div>
     </div>
 
-    <textarea id="inputText" placeholder="Cole aqui o resultado da Mega-Sena... Exemplo:&#10;Concurso 3054 - 08/09/2026&#10;Números sorteados: 43 - 58 - 24 - 47 - 08 - 17"></textarea>
+    <!-- ─── ESTATÍSTICAS + PALPITES ─── -->
+    <div class="row">
+        <!-- Frequência -->
+        <div class="card">
+            <h2>📊 Frequência dos números <small>ordem crescente</small></h2>
+            <div id="freqContainer" style="max-height:320px; overflow-y:auto;">
+                <p class="text-muted">Adicione resultados para ver as estatísticas.</p>
+            </div>
+        </div>
 
-    <div class="button-group">
-        <button class="extrair" onclick="extrairDados()">🔍 Extrair Números e Concurso</button>
-        <button class="download" onclick="baixarArquivo()" id="btnDownload" disabled>⬇️ Baixar .txt</button>
-        <button class="reset" onclick="limpar()">🗑️ Limpar</button>
+        <!-- Palpites -->
+        <div class="card">
+            <h2>🔥 Palpites (15 jogos)</h2>
+            <div style="display:flex; flex-wrap:wrap; gap:20px;">
+                <div style="flex:1; min-width:140px;">
+                    <h4 style="margin:0 0 8px; color:#b45a2a;">🔥 Quentes</h4>
+                    <div id="hotNumbers" class="text-muted">—</div>
+                </div>
+                <div style="flex:1; min-width:140px;">
+                    <h4 style="margin:0 0 8px; color:#1f4b7a;">❄️ Frios</h4>
+                    <div id="coldNumbers" class="text-muted">—</div>
+                </div>
+            </div>
+            <hr style="margin:16px 0; border-color:#eaf0f8;" />
+            <div>
+                <h4 style="margin:0 0 6px;">📌 Jogos sugeridos</h4>
+                <div id="suggestion" class="text-muted">Clique em "Gerar 15 palpites"</div>
+                <button class="btn btn-primary btn-sm mt-12" id="generateSuggestionBtn">🎯 Gerar 15 palpites</button>
+            </div>
+        </div>
     </div>
 
-    <div class="result-area" id="resultArea" style="display:none;">
-        <h3>📋 Dados extraídos</h3>
-        <div id="stats" class="stats"></div>
-        <div id="concursoInfo" class="concurso-info"></div>
-        <pre id="resultContent"></pre>
+    <!-- ─── COMPARATIVO ─── -->
+    <div class="card">
+        <h2>📋 Comparativo com último resultado</h2>
+        <p class="text-muted">Aqui você vê quantos números cada palpite gerado acertou no último sorteio cadastrado.</p>
+        <div id="comparativoContainer">
+            <p class="text-muted">Gere palpites e adicione um novo resultado para ver a comparação.</p>
+        </div>
     </div>
 
-    <script>
-        // --------------------------------------------------------------
-        // 1. Extrai o número do concurso
-        // --------------------------------------------------------------
-        function extrairConcurso(texto) {
-            // Padrões: Concurso 3054, Concurso nº 3054, #3054, Sorteio 3054, etc.
-            const regex = /(?:Concurso|Sorteio|Concurso\s*n[º°]?|#)\s*(\d+)/i;
-            const match = texto.match(regex);
-            return match ? match[1] : null;
+    <!-- ─── ANÁLISE ─── -->
+    <div class="row">
+        <div class="card">
+            <h2>🧮 Análise por faixa</h2>
+            <div id="rangeStats">
+                <p class="text-muted">Distribuição dos números sorteados por faixa (1‑10, 11‑20, …).</p>
+            </div>
+        </div>
+        <div class="card">
+            <h2>🔁 Números repetidos</h2>
+            <div id="repeatedNumbers">
+                <p class="text-muted">Números que apareceram mais de uma vez no mesmo sorteio.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ─── IMPORTAR / EXPORTAR ─── -->
+    <div class="card">
+        <h2>📁 Importar / Exportar</h2>
+        <div class="flex-between">
+            <div class="flex-wrap gap-8">
+                <button class="btn btn-outline btn-sm" id="exportBtn">⬇️ Exportar TXT</button>
+                <button class="btn btn-outline btn-sm" id="importBtn">⬆️ Importar</button>
+                <input type="file" id="fileInput" accept=".txt" style="display:none;" />
+                <button class="btn btn-outline btn-sm" id="undoBtn">↩️ Desfazer último</button>
+            </div>
+            <span class="text-muted" style="font-size:0.8rem;">Os dados são salvos automaticamente no seu navegador.</span>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    (function() {
+        'use strict';
+
+        // ─── Estado ───
+        const STORAGE_KEY = 'megasena_results';
+        const PALPITES_KEY = 'megasena_palpites';
+        let results = [];             // array de { concurso, numeros: [6 números] }
+        let lastDeleted = null;       // para undo
+        let lastGeneratedPalpites = []; // array de arrays (15 jogos de 6 números)
+
+        // ─── DOM ───
+        const $ = id => document.getElementById(id);
+        const n1 = $('n1'), n2 = $('n2'), n3 = $('n3'), n4 = $('n4'), n5 = $('n5'), n6 = $('n6');
+        const concursoInput = $('concursoInput');
+        const addBtn = $('addResultBtn');
+        const clearAllBtn = $('clearAllBtn');
+        const resultsList = $('resultsList');
+        const totalDraws = $('totalDraws');
+        const lastDraw = $('lastDraw');
+        const freqContainer = $('freqContainer');
+        const hotNumbers = $('hotNumbers');
+        const coldNumbers = $('coldNumbers');
+        const suggestion = $('suggestion');
+        const generateSuggestionBtn = $('generateSuggestionBtn');
+        const rangeStats = $('rangeStats');
+        const repeatedNumbers = $('repeatedNumbers');
+        const exportBtn = $('exportBtn');
+        const importBtn = $('importBtn');
+        const fileInput = $('fileInput');
+        const undoBtn = $('undoBtn');
+        const comparativoContainer = $('comparativoContainer');
+
+        // ─── Utilitários ───
+        function sortNumbers(arr) {
+            return [...arr].sort((a, b) => a - b);
         }
 
-        // --------------------------------------------------------------
-        // 2. Extrai todos os números de 1 a 60
-        // --------------------------------------------------------------
-        function extrairNumerosDoTexto(texto) {
-            const regex = /\b(0?[1-9]|[1-5][0-9]|60)\b/g;
-            const matches = [...texto.matchAll(regex)].map(m => m[0]);
-            return matches;
+        function formatNumbers(arr) {
+            return arr.map(n => String(n).padStart(2, '0')).join(' · ');
         }
 
-        // --------------------------------------------------------------
-        // 3. Pega os 6 primeiros números (Mega-Sena)
-        // --------------------------------------------------------------
-        function extrairSena(texto) {
-            const todos = extrairNumerosDoTexto(texto);
-            return todos.slice(0, 6);
+        function isValidNumber(n) {
+            const num = Number(n);
+            return Number.isInteger(num) && num >= 1 && num <= 60;
         }
 
-        // --------------------------------------------------------------
-        // 4. Formata para exibição e arquivo
-        // --------------------------------------------------------------
-        function formatarParaArquivo(numeros, concurso) {
-            let partes = [];
-            if (concurso) partes.push(`Concurso ${concurso}`);
-            partes.push(numeros.join(' - '));
-            return partes.join(' - ');
+        function getNumbersFromInputs() {
+            const vals = [n1.value, n2.value, n3.value, n4.value, n5.value, n6.value];
+            const nums = vals.map(v => Number(v.trim()));
+            if (nums.some(n => !isValidNumber(n))) return null;
+            const unique = new Set(nums);
+            if (unique.size !== 6) return null;
+            return sortNumbers(nums);
         }
 
-        // --------------------------------------------------------------
-        // 5. Ação principal
-        // --------------------------------------------------------------
-        let ultimosNumeros = [];
-        let ultimoConcurso = null;
+        function clearInputs() {
+            n1.value = ''; n2.value = ''; n3.value = ''; n4.value = ''; n5.value = ''; n6.value = '';
+            concursoInput.value = '';
+        }
 
-        function extrairDados() {
-            const texto = document.getElementById('inputText').value;
-            if (!texto.trim()) {
-                alert('Por favor, cole algum texto primeiro.');
-                return;
-            }
-
-            const numeros = extrairSena(texto);
-            const concurso = extrairConcurso(texto);
-            ultimosNumeros = numeros;
-            ultimoConcurso = concurso;
-
-            const resultArea = document.getElementById('resultArea');
-            const stats = document.getElementById('stats');
-            const concursoInfo = document.getElementById('concursoInfo');
-            const content = document.getElementById('resultContent');
-            const btnDownload = document.getElementById('btnDownload');
-
-            if (numeros.length === 0) {
-                stats.textContent = '❌ Nenhum número entre 01 e 60 foi encontrado.';
-                concursoInfo.textContent = '';
-                content.textContent = '';
-                resultArea.style.display = 'block';
-                btnDownload.disabled = true;
-                return;
-            }
-
-            // Exibe estatísticas
-            stats.textContent = `✅ ${numeros.length} número(s) extraído(s) (máx. 6).`;
-
-            // Concurso
-            if (concurso) {
-                concursoInfo.textContent = `🏷️ Concurso identificado: ${concurso}`;
+        // ─── Persistência ───
+        function loadFromStorage() {
+            const stored = localStorage.getItem(STORAGE_KEY);
+            if (stored) {
+                try {
+                    results = JSON.parse(stored);
+                    if (!Array.isArray(results)) results = [];
+                } catch (_) { results = []; }
             } else {
-                concursoInfo.textContent = 'ℹ️ Nenhum número de concurso encontrado.';
+                results = [];
             }
+            // garantir que cada entrada tenha numeros ordenados
+            results = results.filter(r => Array.isArray(r.numeros) && r.numeros.length === 6)
+                .map(r => ({ ...r, numeros: sortNumbers(r.numeros) }));
 
-            // Conteúdo formatado
-            const formatado = formatarParaArquivo(numeros, concurso);
-            content.textContent = formatado;
-
-            resultArea.style.display = 'block';
-            btnDownload.disabled = false;
+            const palpitesStored = localStorage.getItem(PALPITES_KEY);
+            if (palpitesStored) {
+                try {
+                    lastGeneratedPalpites = JSON.parse(palpitesStored);
+                    if (!Array.isArray(lastGeneratedPalpites)) lastGeneratedPalpites = [];
+                } catch (_) { lastGeneratedPalpites = []; }
+            }
         }
 
-        // --------------------------------------------------------------
-        // 6. Baixar arquivo .txt
-        // --------------------------------------------------------------
-        function baixarArquivo() {
-            if (!ultimosNumeros || ultimosNumeros.length === 0) {
-                alert('Nenhum número para baixar. Execute a extração primeiro.');
+        function saveToStorage() {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(results));
+        }
+
+        function savePalpitesToStorage() {
+            localStorage.setItem(PALPITES_KEY, JSON.stringify(lastGeneratedPalpites));
+        }
+
+        // ─── Render ───
+        function renderAll() {
+            renderResultsList();
+            renderStats();
+            renderPalpites();
+            renderRangeStats();
+            renderRepeated();
+            renderComparativo();
+            totalDraws.textContent = results.length;
+            if (results.length > 0) {
+                const last = results[results.length - 1];
+                lastDraw.textContent = formatNumbers(last.numeros) + (last.concurso ? ` (${last.concurso})` : '');
+            } else {
+                lastDraw.textContent = '—';
+            }
+        }
+
+        function renderResultsList() {
+            resultsList.innerHTML = '';
+            if (results.length === 0) {
+                resultsList.innerHTML = '<span class="text-muted">Nenhum sorteio cadastrado.</span>';
                 return;
             }
+            // mostrar do mais recente para o mais antigo
+            const reversed = [...results].reverse();
+            for (const r of reversed) {
+                const chip = document.createElement('span');
+                chip.className = 'result-chip';
+                const nums = formatNumbers(r.numeros);
+                const label = r.concurso ? `#${r.concurso} ` : '';
+                const originalIdx = results.indexOf(r);
+                chip.innerHTML = `${label}${nums} <span class="del" data-idx="${originalIdx}">✕</span>`;
+                chip.querySelector('.del').addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const idx = Number(this.dataset.idx);
+                    if (!isNaN(idx) && idx >= 0 && idx < results.length) {
+                        lastDeleted = results[idx];
+                        results.splice(idx, 1);
+                        saveToStorage();
+                        renderAll();
+                    }
+                });
+                resultsList.appendChild(chip);
+            }
+        }
 
-            const conteudo = formatarParaArquivo(ultimosNumeros, ultimoConcurso);
-            const blob = new Blob([conteudo], { type: 'text/plain;charset=utf-8' });
+        // ─── Estatísticas de frequência ───
+        function getFrequencies() {
+            const freq = new Array(61).fill(0);
+            for (const r of results) {
+                for (const n of r.numeros) {
+                    freq[n] = (freq[n] || 0) + 1;
+                }
+            }
+            return freq;
+        }
+
+        function renderStats() {
+            if (results.length === 0) {
+                freqContainer.innerHTML = '<p class="text-muted">Adicione resultados para ver as estatísticas.</p>';
+                return;
+            }
+            const freq = getFrequencies();
+            // Ordenar por frequência crescente (menor primeiro)
+            const sortedNumbers = [];
+            for (let i = 1; i <= 60; i++) sortedNumbers.push({ numero: i, freq: freq[i] || 0 });
+            sortedNumbers.sort((a, b) => a.freq - b.freq || a.numero - b.numero);
+            const max = Math.max(...sortedNumbers.map(x => x.freq), 1);
+            let html = '<table><thead><tr><th>Nº</th><th>Freq.</th><th>%</th><th></th></tr></thead><tbody>';
+            for (const item of sortedNumbers) {
+                const f = item.freq;
+                const pct = results.length > 0 ? ((f / (results.length * 6)) * 100).toFixed(1) : '0.0';
+                const bar = results.length > 0 ? Math.round((f / max) * 100) : 0;
+                html += `<tr>
+                    <td><span class="number-badge">${String(item.numero).padStart(2,'0')}</span></td>
+                    <td>${f}</td>
+                    <td>${pct}%</td>
+                    <td><div class="stat-bar"><div class="fill" style="width:${bar}%;"></div></div></td>
+                </tr>`;
+            }
+            html += '</tbody></table>';
+            freqContainer.innerHTML = html;
+        }
+
+        // ─── Palpites (quentes / frios) ───
+        function renderPalpites() {
+            if (results.length === 0) {
+                hotNumbers.textContent = '—';
+                coldNumbers.textContent = '—';
+                suggestion.innerHTML = '<span class="text-muted">Adicione resultados primeiro.</span>';
+                return;
+            }
+            const freq = getFrequencies();
+            // lista de 1..60 com { numero, freq }
+            const list = [];
+            for (let i = 1; i <= 60; i++) list.push({ numero: i, freq: freq[i] || 0 });
+
+            // ordenar por frequência (decrescente) e pegar top 6
+            const sorted = [...list].sort((a, b) => b.freq - a.freq || a.numero - b.numero);
+            const top6 = sorted.slice(0, 6).map(x => x.numero);
+            hotNumbers.innerHTML = top6.map(n => `<span class="number-badge hot">${String(n).padStart(2,'0')}</span>`).join(' ');
+
+            // frios: os que estão há mais tempo sem aparecer (menor frequência)
+            const bottom6 = sorted.slice(-6).map(x => x.numero).sort((a,b)=>a-b);
+            coldNumbers.innerHTML = bottom6.map(n => `<span class="number-badge cold">${String(n).padStart(2,'0')}</span>`).join(' ');
+        }
+
+        // ─── Gerar 15 palpites ───
+        function generatePalpites() {
+            if (results.length === 0) return;
+            const freq = getFrequencies();
+            // Criar lista ponderada: números com maior frequência têm mais chance
+            const weights = [];
+            for (let i = 1; i <= 60; i++) {
+                // Peso base + frequência
+                const f = freq[i] || 0;
+                weights.push({ numero: i, peso: 1 + f * 2 }); // ajuste simples
+            }
+
+            function pickWeighted(available) {
+                const totalWeight = available.reduce((sum, item) => sum + item.peso, 0);
+                let rand = Math.random() * totalWeight;
+                for (const item of available) {
+                    rand -= item.peso;
+                    if (rand <= 0) return item;
+                }
+                return available[available.length - 1];
+            }
+
+            const jogos = [];
+            for (let j = 0; j < 15; j++) {
+                const available = weights.map(w => ({ ...w }));
+                const jogo = [];
+                for (let k = 0; k < 6; k++) {
+                    const chosen = pickWeighted(available);
+                    jogo.push(chosen.numero);
+                    // remover escolhido da lista disponível
+                    const idx = available.findIndex(item => item.numero === chosen.numero);
+                    if (idx !== -1) available.splice(idx, 1);
+                }
+                jogos.push(sortNumbers(jogo));
+            }
+            lastGeneratedPalpites = jogos;
+            savePalpitesToStorage();
+            renderSuggestionList();
+            renderComparativo(); // atualizar comparação se já houver último resultado
+        }
+
+        function renderSuggestionList() {
+            if (lastGeneratedPalpites.length === 0) {
+                suggestion.innerHTML = '<span class="text-muted">Clique em "Gerar 15 palpites".</span>';
+                return;
+            }
+            let html = '<div class="palpites-grid">';
+            lastGeneratedPalpites.forEach((jogo, index) => {
+                html += `<div class="palpite-item"><span class="nums">${formatNumbers(jogo)}</span> <span class="text-muted">Jogo ${index+1}</span></div>`;
+            });
+            html += '</div>';
+            suggestion.innerHTML = html;
+        }
+
+        // ─── Comparativo ───
+        function renderComparativo() {
+            if (results.length === 0) {
+                comparativoContainer.innerHTML = '<p class="text-muted">Adicione um resultado para comparar.</p>';
+                return;
+            }
+            if (lastGeneratedPalpites.length === 0) {
+                comparativoContainer.innerHTML = '<p class="text-muted">Gere palpites antes de adicionar um novo resultado.</p>';
+                return;
+            }
+            const lastResult = results[results.length - 1].numeros;
+            const lastSet = new Set(lastResult);
+            let html = `<p class="text-muted">Último resultado: <strong>${formatNumbers(lastResult)}</strong></p>`;
+            html += '<div class="comparativo-list">';
+            lastGeneratedPalpites.forEach((jogo, index) => {
+                const acertos = jogo.filter(n => lastSet.has(n)).length;
+                html += `<div class="comparativo-item">Jogo ${index+1}: ${formatNumbers(jogo)} → <span class="acerto-count">${acertos} acerto(s)</span></div>`;
+            });
+            html += '</div>';
+            comparativoContainer.innerHTML = html;
+        }
+
+        // ─── Análise por faixa ───
+        function renderRangeStats() {
+            if (results.length === 0) {
+                rangeStats.innerHTML = '<p class="text-muted">Adicione resultados para ver a distribuição.</p>';
+                return;
+            }
+            const faixas = [
+                { label: '1-10', min: 1, max: 10, count: 0 },
+                { label: '11-20', min: 11, max: 20, count: 0 },
+                { label: '21-30', min: 21, max: 30, count: 0 },
+                { label: '31-40', min: 31, max: 40, count: 0 },
+                { label: '41-50', min: 41, max: 50, count: 0 },
+                { label: '51-60', min: 51, max: 60, count: 0 }
+            ];
+            for (const r of results) {
+                for (const n of r.numeros) {
+                    for (const faixa of faixas) {
+                        if (n >= faixa.min && n <= faixa.max) {
+                            faixa.count++;
+                            break;
+                        }
+                    }
+                }
+            }
+            const total = results.length * 6;
+            let html = '<table><thead><tr><th>Faixa</th><th>Qtd.</th><th>%</th></tr></thead><tbody>';
+            for (const faixa of faixas) {
+                const pct = total > 0 ? ((faixa.count / total) * 100).toFixed(1) : '0.0';
+                html += `<tr><td>${faixa.label}</td><td>${faixa.count}</td><td>${pct}%</td></tr>`;
+            }
+            html += '</tbody></table>';
+            rangeStats.innerHTML = html;
+        }
+
+        // ─── Números repetidos ───
+        function renderRepeated() {
+            if (results.length === 0) {
+                repeatedNumbers.innerHTML = '<p class="text-muted">Adicione resultados para verificar repetições.</p>';
+                return;
+            }
+            // Para Mega-Sena não há repetição no mesmo sorteio, então apenas informamos.
+            repeatedNumbers.innerHTML = '<p class="text-muted">Não há números repetidos no mesmo sorteio (regra da Mega-Sena).</p>';
+        }
+
+        // ─── IMPORTAÇÃO AVANÇADA ───
+        function parseMegaSenaLine(line) {
+            // Tenta o formato: "Concurso: 1 | Data: 10/03/1996 | Números: 4 5 30 33 41 52"
+            const match = line.match(/Concurso:\s*(\d+)\s*\|\s*Data:.*?\|\s*Números:\s*([\d\s]+)/);
+            if (match) {
+                const concurso = match[1];
+                const numsStr = match[2].trim().split(/\s+/).map(Number);
+                if (numsStr.length === 6 && numsStr.every(isValidNumber)) {
+                    return { concurso, numeros: sortNumbers(numsStr) };
+                }
+            }
+
+            // Fallback: formato antigo separado por ';' (N1;N2;...)
+            const parts = line.split(';');
+            if (parts.length >= 6) {
+                const nums = parts.slice(0, 6).map(n => Number(n.trim()));
+                if (nums.every(isValidNumber) && new Set(nums).size === 6) {
+                    const concurso = parts.length > 6 ? parts[6].trim() : '';
+                    return { concurso, numeros: sortNumbers(nums) };
+                }
+            }
+
+            // Se não reconheceu, retorna null
+            return null;
+        }
+
+        function handleImportFile(file) {
+            const reader = new FileReader();
+            reader.onload = (ev) => {
+                const content = ev.target.result;
+                const lines = content.split('\n')
+                    .map(line => line.trim())
+                    .filter(line => line.length > 0);
+
+                if (lines.length === 0) {
+                    alert('Arquivo vazio.');
+                    return;
+                }
+
+                // Tenta detectar se é o formato Mega-Sena (primeira linha contém "Concurso:")
+                const isMegaFormat = lines.some(line => /Concurso:\s*\d/.test(line));
+
+                let newResults = [];
+                for (const line of lines) {
+                    const parsed = parseMegaSenaLine(line);
+                    if (parsed) {
+                        newResults.push(parsed);
+                    } else if (!isMegaFormat) {
+                        // Se não for formato Mega, tenta interpretar como CSV simples (sem cabeçalho)
+                        // Exemplo: "4;5;30;33;41;52;1" (concurso opcional)
+                        const parts = line.split(';');
+                        if (parts.length >= 6) {
+                            const nums = parts.slice(0, 6).map(n => Number(n.trim()));
+                            if (nums.every(isValidNumber) && new Set(nums).size === 6) {
+                                const concurso = parts.length > 6 ? parts[6].trim() : '';
+                                newResults.push({ concurso, numeros: sortNumbers(nums) });
+                            }
+                        }
+                    }
+                }
+
+                if (newResults.length === 0) {
+                    alert('Nenhum resultado válido encontrado no arquivo.');
+                    return;
+                }
+
+                // Adiciona ao final da lista
+                results = results.concat(newResults);
+                saveToStorage();
+                renderAll();
+                alert(`${newResults.length} resultados importados com sucesso!`);
+                fileInput.value = '';
+            };
+            reader.readAsText(file);
+        }
+
+        // ─── Eventos ───
+        addBtn.addEventListener('click', () => {
+            const nums = getNumbersFromInputs();
+            if (!nums) {
+                alert('Insira 6 números válidos (1 a 60) e sem repetição.');
+                return;
+            }
+            const concurso = concursoInput.value.trim() || '';
+            results.push({ concurso, numeros: nums });
+            saveToStorage();
+            clearInputs();
+            renderAll();
+        });
+
+        clearAllBtn.addEventListener('click', () => {
+            if (confirm('Tem certeza que deseja apagar todos os resultados?')) {
+                results = [];
+                saveToStorage();
+                renderAll();
+            }
+        });
+
+        undoBtn.addEventListener('click', () => {
+            if (lastDeleted) {
+                results.push(lastDeleted);
+                saveToStorage();
+                lastDeleted = null;
+                renderAll();
+            } else {
+                alert('Nada para desfazer.');
+            }
+        });
+
+        generateSuggestionBtn.addEventListener('click', generatePalpites);
+
+        exportBtn.addEventListener('click', () => {
+            if (results.length === 0) {
+                alert('Não há resultados para exportar.');
+                return;
+            }
+            let txt = 'Concurso;N1;N2;N3;N4;N5;N6\n';
+            for (const r of results) {
+                const nums = r.numeros.map(n => String(n).padStart(2, '0')).join(';');
+                txt += `${r.concurso || ''};${nums}\n`;
+            }
+            const blob = new Blob([txt], { type: 'text/plain' });
             const url = URL.createObjectURL(blob);
-            const link = document.createElement('a');
-            link.href = url;
-
-            // Nome do arquivo inclui concurso (se houver)
-            let nomeBase = 'mega_sena';
-            if (ultimoConcurso) nomeBase += `_concurso_${ultimoConcurso}`;
-            const now = new Date();
-            const dataStr = now.toISOString().slice(0,10).replace(/-/g, '');
-            link.download = `${nomeBase}_${dataStr}.txt`;
-
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'resultados_megasena.txt';
+            a.click();
             URL.revokeObjectURL(url);
-        }
+        });
 
-        // --------------------------------------------------------------
-        // 7. Limpar
-        // --------------------------------------------------------------
-        function limpar() {
-            document.getElementById('inputText').value = '';
-            document.getElementById('resultArea').style.display = 'none';
-            document.getElementById('btnDownload').disabled = true;
-            ultimosNumeros = [];
-            ultimoConcurso = null;
-        }
-    </script>
+        importBtn.addEventListener('click', () => fileInput.click());
+        fileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            handleImportFile(file);
+        });
 
+        // Inicialização
+        loadFromStorage();
+        renderAll();
+        renderSuggestionList();
+        renderComparativo();
+    })();
+</script>
 </body>
 </html>
