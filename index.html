@@ -5,354 +5,431 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Estatísticas Mega-Sena</title>
     <style>
-        /* ── Reset e cores ── */
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
             font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
-            background: #f5f7fc;
-            color: #1e293b;
-            padding: 24px 16px;
+            background: #f5f7fc; color: #1e293b; padding: 24px 16px;
         }
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        /* ── Cabeçalho ── */
+        .container { max-width: 1200px; margin: 0 auto; }
         header {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 28px;
-            gap: 12px;
+            display: flex; flex-wrap: wrap; justify-content: space-between;
+            align-items: center; margin-bottom: 28px; gap: 12px;
         }
         header h1 {
-            font-size: 1.9rem;
-            font-weight: 700;
+            font-size: 1.9rem; font-weight: 700;
             background: linear-gradient(145deg, #1e3a5f, #0f2b44);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            letter-spacing: -0.5px;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text; letter-spacing: -0.5px;
         }
         header .badge {
-            background: #e9edf5;
-            padding: 6px 16px;
-            border-radius: 40px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: #1e3a5f;
+            background: #e9edf5; padding: 6px 16px; border-radius: 40px;
+            font-size: 0.85rem; font-weight: 600; color: #1e3a5f;
         }
-
-        /* ── Cards ── */
         .card {
-            background: #ffffff;
-            border-radius: 20px;
-            padding: 22px 24px;
+            background: #ffffff; border-radius: 20px; padding: 22px 24px;
             box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04), 0 2px 6px rgba(0, 20, 40, 0.04);
-            margin-bottom: 28px;
-            border: 1px solid #edf2f9;
+            margin-bottom: 28px; border: 1px solid #edf2f9;
             transition: box-shadow 0.2s;
         }
-        .card:hover {
-            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.06);
-        }
+        .card:hover { box-shadow: 0 12px 32px rgba(0, 0, 0, 0.06); }
         .card h2 {
-            font-size: 1.25rem;
-            font-weight: 600;
-            margin-bottom: 16px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: #0b2a44;
+            font-size: 1.25rem; font-weight: 600; margin-bottom: 16px;
+            display: flex; align-items: center; gap: 10px; color: #0b2a44;
         }
         .card h2 small {
-            font-weight: 400;
-            font-size: 0.85rem;
-            color: #64748b;
-            margin-left: auto;
+            font-weight: 400; font-size: 0.85rem; color: #64748b; margin-left: auto;
         }
-
-        /* ── Grid ── */
-        .row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 24px;
+        .row { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+        @media (max-width: 780px) { .row { grid-template-columns: 1fr; } }
+        .form-inline { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 10px; }
+        .form-inline label { font-weight: 500; font-size: 0.95rem; }
+        .form-inline input, .form-inline select {
+            padding: 10px 14px; border: 1.5px solid #dce3ef; border-radius: 12px;
+            font-size: 0.95rem; background: #fafcff; transition: 0.2s;
+            flex: 1 1 140px; min-width: 80px;
         }
-        @media (max-width: 780px) {
-            .row {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        /* ── Formulários ── */
-        .form-inline {
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            gap: 12px 10px;
-        }
-        .form-inline label {
-            font-weight: 500;
-            font-size: 0.95rem;
-        }
-        .form-inline input,
-        .form-inline select {
-            padding: 10px 14px;
-            border: 1.5px solid #dce3ef;
-            border-radius: 12px;
-            font-size: 0.95rem;
-            background: #fafcff;
-            transition: 0.2s;
-            flex: 1 1 140px;
-            min-width: 80px;
-        }
-        .form-inline input:focus,
-        .form-inline select:focus {
-            outline: none;
-            border-color: #2e5a8a;
+        .form-inline input:focus, .form-inline select:focus {
+            outline: none; border-color: #2e5a8a;
             box-shadow: 0 0 0 3px rgba(46, 90, 138, 0.15);
         }
         .form-inline .num-input-group {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-            flex: 2 1 300px;
+            display: flex; flex-wrap: wrap; gap: 6px; flex: 2 1 300px;
         }
         .form-inline .num-input-group input {
-            flex: 1 1 50px;
-            min-width: 48px;
-            text-align: center;
+            flex: 1 1 50px; min-width: 48px; text-align: center;
         }
-
-        /* ── Botões ── */
         .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            padding: 10px 22px;
-            border: none;
-            border-radius: 40px;
-            font-weight: 600;
-            font-size: 0.9rem;
-            cursor: pointer;
-            transition: 0.2s;
-            background: #eef2f8;
-            color: #1e3a5f;
-            gap: 6px;
-            white-space: nowrap;
+            display: inline-flex; align-items: center; justify-content: center;
+            padding: 10px 22px; border: none; border-radius: 40px;
+            font-weight: 600; font-size: 0.9rem; cursor: pointer;
+            transition: 0.2s; background: #eef2f8; color: #1e3a5f;
+            gap: 6px; white-space: nowrap;
         }
-        .btn-primary {
-            background: #1e3a5f;
-            color: #fff;
-        }
-        .btn-primary:hover {
-            background: #143049;
-            transform: translateY(-1px);
-            box-shadow: 0 6px 14px rgba(30, 58, 95, 0.25);
-        }
-        .btn-success {
-            background: #1f8b4c;
-            color: #fff;
-        }
-        .btn-success:hover {
-            background: #16733e;
-            transform: translateY(-1px);
-            box-shadow: 0 6px 14px rgba(31, 139, 76, 0.25);
-        }
-        .btn-danger {
-            background: #b13e3e;
-            color: #fff;
-        }
-        .btn-danger:hover {
-            background: #942f2f;
-        }
-        .btn-outline {
-            background: transparent;
-            border: 1.5px solid #d0d9e8;
-        }
-        .btn-outline:hover {
-            background: #f0f4fe;
-            border-color: #a0b3cf;
-        }
-        .btn-sm {
-            padding: 6px 14px;
-            font-size: 0.8rem;
-        }
-        .btn:disabled {
-            opacity: 0.5;
-            pointer-events: none;
-        }
-
-        /* ── Tabelas ── */
-        .table-wrap {
-            overflow-x: auto;
-            margin-top: 10px;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.92rem;
-        }
-        th {
-            text-align: left;
-            padding: 12px 10px 8px 0;
-            font-weight: 600;
-            color: #334e6e;
-            border-bottom: 2px solid #e2eaf5;
-        }
-        td {
-            padding: 8px 10px 8px 0;
-            border-bottom: 1px solid #eef3fa;
-        }
+        .btn-primary { background: #1e3a5f; color: #fff; }
+        .btn-primary:hover { background: #143049; transform: translateY(-1px);
+            box-shadow: 0 6px 14px rgba(30, 58, 95, 0.25); }
+        .btn-success { background: #1f8b4c; color: #fff; }
+        .btn-success:hover { background: #16733e; transform: translateY(-1px);
+            box-shadow: 0 6px 14px rgba(31, 139, 76, 0.25); }
+        .btn-danger { background: #b13e3e; color: #fff; }
+        .btn-danger:hover { background: #942f2f; }
+        .btn-purple { background: #6b4fc7; color: #fff; }
+        .btn-purple:hover { background: #563eb0; transform: translateY(-1px);
+            box-shadow: 0 6px 14px rgba(107, 79, 199, 0.3); }
+        .btn-outline { background: transparent; border: 1.5px solid #d0d9e8; }
+        .btn-outline:hover { background: #f0f4fe; border-color: #a0b3cf; }
+        .btn-sm { padding: 6px 14px; font-size: 0.8rem; }
+        .btn:disabled { opacity: 0.5; pointer-events: none; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.92rem; }
+        th { text-align: left; padding: 12px 10px 8px 0; font-weight: 600;
+            color: #334e6e; border-bottom: 2px solid #e2eaf5; }
+        td { padding: 8px 10px 8px 0; border-bottom: 1px solid #eef3fa; }
         .number-badge {
-            display: inline-block;
-            min-width: 36px;
-            padding: 2px 8px;
-            border-radius: 30px;
-            background: #eef3fa;
-            text-align: center;
-            font-weight: 600;
-            font-size: 0.85rem;
+            display: inline-block; min-width: 36px; padding: 2px 8px;
+            border-radius: 30px; background: #eef3fa; text-align: center;
+            font-weight: 600; font-size: 0.85rem;
         }
-        .number-badge.hot {
-            background: #fde7d9;
-            color: #b45a2a;
-        }
-        .number-badge.cold {
-            background: #d9e7f7;
-            color: #1f4b7a;
-        }
+        .number-badge.hot { background: #fde7d9; color: #b45a2a; }
+        .number-badge.morno { background: #fff3d6; color: #a0730a; }
+        .number-badge.cold { background: #d9e7f7; color: #1f4b7a; }
         .stat-bar {
-            display: inline-block;
-            height: 8px;
-            border-radius: 20px;
-            background: #d3dfef;
-            margin-left: 6px;
-            min-width: 30px;
+            display: inline-block; height: 8px; border-radius: 20px;
+            background: #d3dfef; margin-left: 6px; min-width: 30px;
         }
         .stat-bar .fill {
-            height: 100%;
-            border-radius: 20px;
-            background: #2e5a8a;
+            height: 100%; border-radius: 20px; background: #2e5a8a;
             transition: width 0.3s;
         }
-
-        /* ── Lista de resultados ── */
         .results-list {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px 14px;
-            margin: 8px 0 4px;
-            max-height: 220px;
-            overflow-y: auto;
-            padding: 4px 2px;
+            display: flex; flex-wrap: wrap; gap: 10px 14px; margin: 8px 0 4px;
+            max-height: 220px; overflow-y: auto; padding: 4px 2px;
         }
         .results-list .result-chip {
-            background: #f0f5fe;
-            padding: 6px 16px 6px 14px;
-            border-radius: 40px;
-            font-size: 0.9rem;
-            font-weight: 500;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
+            background: #f0f5fe; padding: 6px 16px 6px 14px;
+            border-radius: 40px; font-size: 0.9rem; font-weight: 500;
+            display: inline-flex; align-items: center; gap: 6px;
             border: 1px solid #e2eaf5;
         }
         .results-list .result-chip .del {
-            cursor: pointer;
-            color: #a0b3cf;
-            font-weight: 700;
-            margin-left: 4px;
+            cursor: pointer; color: #a0b3cf; font-weight: 700; margin-left: 4px;
         }
-        .results-list .result-chip .del:hover {
-            color: #b13e3e;
-        }
-
-        /* ── Palpites ── */
+        .results-list .result-chip .del:hover { color: #b13e3e; }
         .palpites-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-            gap: 10px;
-            margin: 8px 0;
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+            gap: 10px; margin: 8px 0;
         }
         .palpite-item {
-            background: #f9fbfe;
-            border-radius: 12px;
-            padding: 8px 12px;
-            border: 1px solid #e2eaf5;
-            font-size: 0.9rem;
+            background: #f9fbfe; border-radius: 12px; padding: 10px 12px;
+            border: 1px solid #e2eaf5; font-size: 0.9rem;
         }
         .palpite-item .nums {
-            font-weight: 600;
-            color: #1e3a5f;
+            font-weight: 600; color: #1e3a5f; display: flex;
+            flex-wrap: wrap; gap: 3px;
         }
-        .comparativo-list {
-            display: flex;
-            flex-wrap: wrap;
+        .mini-ball {
+            display: inline-flex; align-items: center; justify-content: center;
+            width: 26px; height: 26px; border-radius: 50%;
+            font-size: 0.7rem; font-weight: 700;
+        }
+        .mini-ball.hot-ball { background: #fde7d9; color: #b45a2a; }
+        .mini-ball.morno-ball { background: #fff3d6; color: #a0730a; }
+        .mini-ball.cold-ball { background: #d9e7f7; color: #1f4b7a; }
+        .mini-ball.hit-ball { background: #1f8b4c; color: #fff; box-shadow: 0 0 0 2px #b9f0cd; }
+        .mini-ball.hit-quadra { background: #1f8b4c; color: #fff; box-shadow: 0 0 0 2px #b9f0cd; }
+        .mini-ball.hit-quina { background: #d4a017; color: #fff; box-shadow: 0 0 0 2px #fde68a; }
+        .mini-ball.hit-sena {
+            background: #c0392b; color: #fff;
+            box-shadow: 0 0 0 2px #fca5a5;
+            animation: pulseBall 1.5s infinite;
+        }
+        @keyframes pulseBall {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.08); }
+        }
+        .comparativo-list { display: flex; flex-wrap: wrap; gap: 10px; }
+        .comparativo-item {
+            background: #f0f5fe; border-radius: 12px; padding: 8px 14px;
+            border: 1px solid #d0d9e8; font-size: 0.9rem;
+        }
+        .acerto-count { font-weight: 700; color: #1f8b4c; margin-left: 6px; }
+        .cat-box {
+            flex: 1; min-width: 170px; background: #fbfdff;
+            border: 1px solid #eaf0f8; border-radius: 14px; padding: 10px 12px;
+        }
+        .cat-box h4 {
+            margin: 0 0 8px; font-size: 0.95rem;
+            display: flex; align-items: center; gap: 6px;
+        }
+        .cat-box .cat-range { font-size: 0.72rem; color: #64748b; margin-top: 6px; }
+        .cat-numbers { display: flex; flex-wrap: wrap; gap: 4px; }
+        .pi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(105px, 1fr));
             gap: 10px;
         }
-        .comparativo-item {
-            background: #f0f5fe;
-            border-radius: 12px;
-            padding: 8px 14px;
-            border: 1px solid #d0d9e8;
-            font-size: 0.9rem;
+        .pi-card {
+            background: #fbfdff; border: 1px solid #eaf0f8;
+            border-radius: 12px; padding: 12px 10px; text-align: center;
+            transition: 0.2s; position: relative;
         }
-        .acerto-count {
-            font-weight: 700;
-            color: #1f8b4c;
-            margin-left: 6px;
+        .pi-card.top { border-color: #2e5a8a; background: #f0f5fe;
+            box-shadow: 0 4px 12px rgba(46, 90, 138, 0.12); }
+        .pi-card .pi-label {
+            font-weight: 700; font-size: 1.05rem; color: #1e3a5f; margin-bottom: 4px;
         }
-
-        /* ── Misc ── */
-        .flex-between {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            align-items: center;
-            gap: 12px;
+        .pi-card .pi-count {
+            font-size: 1.4rem; font-weight: 700; color: #2e5a8a; line-height: 1;
         }
-        .mt-12 {
-            margin-top: 12px;
+        .pi-card .pi-pct { font-size: 0.78rem; color: #64748b; margin-top: 2px; }
+        .pi-card .pi-tag {
+            position: absolute; top: 6px; right: 6px;
+            background: #2e5a8a; color: #fff;
+            font-size: 0.65rem; padding: 2px 6px; border-radius: 20px;
+            font-weight: 600;
         }
-        .text-muted {
-            color: #64748b;
-            font-size: 0.9rem;
+        .pi-card.top .pi-label { color: #0b2a44; }
+        .pi-highlight {
+            display: inline-block; padding: 1px 8px; border-radius: 20px;
+            background: #e6f1ff; color: #1e3a5f; font-weight: 700;
+            font-size: 0.78rem;
         }
-        .tag {
+        .qmf-badge {
+            display: inline-block; padding: 1px 8px; border-radius: 20px;
+            background: #fde9d4; color: #8a4515; font-weight: 700;
+            font-size: 0.72rem;
+        }
+        .bt-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 10px; margin-bottom: 16px;
+        }
+        .bt-stat {
+            background: #fbfdff; border: 1px solid #eaf0f8;
+            border-radius: 12px; padding: 12px 14px; text-align: center;
+        }
+        .bt-stat .bt-label { font-size: 0.75rem; color: #64748b; margin-bottom: 4px; }
+        .bt-stat .bt-value {
+            font-size: 1.5rem; font-weight: 700; color: #1e3a5f; line-height: 1.1;
+        }
+        .bt-stat.gold { background: #fff8e1; border-color: #f5c344; }
+        .bt-stat.gold .bt-value { color: #b8860b; }
+        .bt-stat.green { background: #e8f7ee; border-color: #56c278; }
+        .bt-stat.green .bt-value { color: #166b3a; }
+        .bt-stat.quadra {
+            background: #e8f7ee; border-color: #1f8b4c;
+            box-shadow: 0 3px 10px rgba(31, 139, 76, 0.15);
+        }
+        .bt-stat.quadra .bt-value { color: #166b3a; }
+        .bt-stat.quina {
+            background: #fff5d6; border-color: #d4a017;
+            box-shadow: 0 3px 10px rgba(212, 160, 23, 0.2);
+        }
+        .bt-stat.quina .bt-value { color: #9c7700; }
+        .bt-stat.sena {
+            background: #ffe1e1; border-color: #c0392b;
+            box-shadow: 0 3px 12px rgba(192, 57, 43, 0.25);
+            animation: glowSena 2s infinite;
+        }
+        .bt-stat.sena .bt-value { color: #a02618; }
+        @keyframes glowSena {
+            0%, 100% { box-shadow: 0 3px 12px rgba(192, 57, 43, 0.25); }
+            50% { box-shadow: 0 3px 20px rgba(192, 57, 43, 0.5); }
+        }
+        .bt-hit-dist {
+            display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px;
+        }
+        .bt-hit-item {
+            flex: 1; min-width: 78px; padding: 10px 8px;
+            background: #fbfdff; border: 1px solid #eaf0f8;
+            border-radius: 10px; text-align: center; transition: 0.2s;
+        }
+        .bt-hit-item .h { font-weight: 700; font-size: 0.9rem; color: #1e3a5f; }
+        .bt-hit-item .c {
+            font-size: 1.15rem; font-weight: 700; color: #2e5a8a; line-height: 1;
+        }
+        .bt-hit-item .p { font-size: 0.7rem; color: #64748b; margin-top: 2px; }
+        .bt-hit-item .tag-premio {
+            display: inline-block; font-size: 0.62rem;
+            padding: 1px 6px; border-radius: 20px; margin-top: 4px;
+            font-weight: 700; letter-spacing: 0.3px;
+        }
+        .bt-hit-item.quadra { background: #e8f7ee; border-color: #1f8b4c; }
+        .bt-hit-item.quadra .c { color: #166b3a; }
+        .bt-hit-item.quadra .tag-premio { background: #1f8b4c; color: #fff; }
+        .bt-hit-item.quina {
+            background: #fff5d6; border-color: #d4a017;
+            box-shadow: 0 3px 10px rgba(212, 160, 23, 0.2);
+        }
+        .bt-hit-item.quina .c { color: #9c7700; }
+        .bt-hit-item.quina .tag-premio { background: #d4a017; color: #fff; }
+        .bt-hit-item.sena {
+            background: #ffe1e1; border-color: #c0392b;
+            box-shadow: 0 3px 12px rgba(192, 57, 43, 0.25);
+            animation: glowSena 2s infinite;
+        }
+        .bt-hit-item.sena .c { color: #a02618; }
+        .bt-hit-item.sena .tag-premio { background: #c0392b; color: #fff; }
+        .bt-top-list { display: flex; flex-direction: column; gap: 10px; }
+        .bt-draw {
+            background: #fbfdff; border: 1px solid #eaf0f8;
+            border-radius: 14px; padding: 12px 14px;
+            display: flex; flex-direction: column; gap: 8px;
+            transition: 0.2s;
+        }
+        .bt-draw.draw-quadra {
+            background: #f0fdf4; border-color: #1f8b4c;
+            box-shadow: 0 4px 14px rgba(31, 139, 76, 0.15);
+            border-left: 5px solid #1f8b4c;
+        }
+        .bt-draw.draw-quina {
+            background: #fffbe6; border-color: #d4a017;
+            box-shadow: 0 4px 16px rgba(212, 160, 23, 0.25);
+            border-left: 5px solid #d4a017;
+        }
+        .bt-draw.draw-sena {
+            background: linear-gradient(135deg, #fff2f2 0%, #ffe1e1 100%);
+            border-color: #c0392b;
+            box-shadow: 0 6px 22px rgba(192, 57, 43, 0.35);
+            border-left: 5px solid #c0392b;
+            animation: glowSena 2s infinite;
+        }
+        .bt-draw .bt-head {
+            display: flex; flex-wrap: wrap; align-items: center;
+            gap: 10px; font-size: 0.88rem;
+        }
+        .bt-draw .bt-head .rank {
+            font-weight: 700; color: #1e3a5f;
+            background: #eef3fa; padding: 2px 10px; border-radius: 20px;
+            font-size: 0.78rem;
+        }
+        .bt-draw.draw-quadra .bt-head .rank { background: #1f8b4c; color: #fff; }
+        .bt-draw.draw-quina .bt-head .rank { background: #d4a017; color: #fff; }
+        .bt-draw.draw-sena .bt-head .rank { background: #c0392b; color: #fff; }
+        .bt-draw .bt-head .concurso { font-weight: 700; color: #0b2a44; }
+        .bt-draw .bt-line {
+            display: flex; flex-wrap: wrap; align-items: center;
+            gap: 6px; font-size: 0.82rem;
+        }
+        .bt-draw .bt-line .lbl {
+            color: #64748b; font-size: 0.78rem; min-width: 90px;
+        }
+        .bt-draw .hits-badge {
+            margin-left: auto; font-weight: 700;
+            background: #1f8b4c; color: #fff;
+            padding: 3px 12px; border-radius: 20px; font-size: 0.8rem;
+        }
+        .bt-draw.draw-quadra .hits-badge { background: #1f8b4c; color: #fff; }
+        .bt-draw.draw-quina .hits-badge { background: #d4a017; color: #fff; font-size: 0.88rem; }
+        .bt-draw.draw-sena .hits-badge { background: #c0392b; color: #fff; font-size: 0.95rem; }
+        .bt-medal { font-size: 1.1rem; margin-left: 4px; }
+        .bt-progress-wrap { margin: 12px 0 16px; }
+        .bt-progress-info {
+            display: flex; justify-content: space-between;
+            font-size: 0.82rem; color: #64748b; margin-bottom: 6px;
+        }
+        .bt-progress {
+            width: 100%; height: 14px; background: #eef3fa;
+            border-radius: 20px; overflow: hidden;
+            border: 1px solid #dce3ef;
+        }
+        .bt-progress .bar {
+            height: 100%;
+            background: linear-gradient(90deg, #2e5a8a, #4a90c2);
+            width: 0%; transition: width 0.15s linear;
+            display: flex; align-items: center; justify-content: flex-end;
+            padding-right: 8px; color: #fff; font-size: 0.7rem;
+            font-weight: 700; min-width: 0;
+        }
+        .bt-progress .bar.purple {
+            background: linear-gradient(90deg, #6b4fc7, #9b7fea);
+        }
+        .bt-legend {
+            display: flex; flex-wrap: wrap; gap: 10px;
+            margin-bottom: 14px; padding: 10px 12px;
+            background: #fbfdff; border: 1px solid #eaf0f8;
+            border-radius: 12px; font-size: 0.8rem;
+        }
+        .bt-legend .item {
+            display: flex; align-items: center; gap: 6px;
+        }
+        .bt-legend .dot {
+            width: 14px; height: 14px; border-radius: 50%;
             display: inline-block;
-            background: #eef3fa;
-            padding: 2px 12px;
-            border-radius: 30px;
-            font-size: 0.8rem;
         }
-        .gap-8 {
-            gap: 8px;
+        .bt-legend .dot.quadra { background: #1f8b4c; }
+        .bt-legend .dot.quina { background: #d4a017; }
+        .bt-legend .dot.sena { background: #c0392b; }
+        .seed-box {
+            background: #fffaf0; border: 1.5px solid #f5c344;
+            border-radius: 12px; padding: 10px 14px;
+            display: flex; flex-wrap: wrap; align-items: center;
+            gap: 10px; margin-bottom: 12px;
         }
-        .flex-wrap {
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
+        .seed-box label {
+            font-weight: 600; color: #8a5a00; font-size: 0.85rem;
         }
-
-        /* scroll */
-        ::-webkit-scrollbar {
-            width: 5px;
-            height: 5px;
+        .seed-box input {
+            padding: 6px 10px; border: 1.5px solid #e0cb8a;
+            border-radius: 8px; font-size: 0.9rem; width: 110px;
+            background: #fffdf7; font-family: monospace;
         }
-        ::-webkit-scrollbar-track {
-            background: #eef3fa;
+        .seed-box .hint {
+            font-size: 0.78rem; color: #8a5a00;
+            flex: 1 1 100%; line-height: 1.4;
         }
-        ::-webkit-scrollbar-thumb {
-            background: #bccbdf;
-            border-radius: 10px;
+        .seed-table {
+            width: 100%; border-collapse: collapse;
+            font-size: 0.88rem; margin-bottom: 16px;
+            border-radius: 12px; overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
         }
+        .seed-table th {
+            background: #1e3a5f; color: #fff;
+            padding: 10px 12px; text-align: center;
+            font-weight: 600; font-size: 0.82rem;
+            border: none;
+        }
+        .seed-table td {
+            padding: 10px 12px; text-align: center;
+            border-bottom: 1px solid #eef3fa;
+        }
+        .seed-table tr:nth-child(even) td { background: #f9fbfe; }
+        .seed-table .seed-num {
+            font-family: monospace; font-weight: 700; color: #1e3a5f;
+        }
+        .seed-table .best { background: #e8f7ee !important; font-weight: 700; }
+        .seed-table .avg-row td {
+            background: #f0f5fe !important;
+            font-weight: 700; color: #1e3a5f;
+            border-top: 2px solid #2e5a8a;
+            border-bottom: 2px solid #2e5a8a;
+            font-size: 0.95rem;
+        }
+        .seed-table .variance {
+            font-size: 0.72rem; color: #64748b; font-weight: 400;
+        }
+        .edu-note {
+            background: #fffaf0;
+            border: 1.5px solid #f5c344;
+            border-radius: 12px;
+            padding: 12px 16px;
+            font-size: 0.85rem;
+            color: #8a5a00;
+            line-height: 1.5;
+            margin-top: 16px;
+        }
+        .edu-note b { color: #6b4400; }
+        .flex-between {
+            display: flex; flex-wrap: wrap; justify-content: space-between;
+            align-items: center; gap: 12px;
+        }
+        .mt-12 { margin-top: 12px; }
+        .text-muted { color: #64748b; font-size: 0.9rem; }
+        .gap-8 { gap: 8px; }
+        .flex-wrap { display: flex; flex-wrap: wrap; align-items: center; }
+        ::-webkit-scrollbar { width: 5px; height: 5px; }
+        ::-webkit-scrollbar-track { background: #eef3fa; }
+        ::-webkit-scrollbar-thumb { background: #bccbdf; border-radius: 10px; }
     </style>
 </head>
 <body>
@@ -360,10 +437,9 @@
 
     <header>
         <h1>🎲 Mega-Sena · Estatísticas</h1>
-        <span class="badge">📊 v1.2 · com importação avançada</span>
+        <span class="badge">📊 v2.9 · export palpites</span>
     </header>
 
-    <!-- ─── CADASTRO DE RESULTADOS ─── -->
     <div class="card">
         <h2>📥 Cadastrar resultado</h2>
         <div class="form-inline">
@@ -387,9 +463,7 @@
         <div class="results-list" id="resultsList"></div>
     </div>
 
-    <!-- ─── ESTATÍSTICAS + PALPITES ─── -->
     <div class="row">
-        <!-- Frequência -->
         <div class="card">
             <h2>📊 Frequência dos números <small>ordem crescente</small></h2>
             <div id="freqContainer" style="max-height:320px; overflow-y:auto;">
@@ -397,29 +471,116 @@
             </div>
         </div>
 
-        <!-- Palpites -->
         <div class="card">
-            <h2>🔥 Palpites (15 jogos)</h2>
-            <div style="display:flex; flex-wrap:wrap; gap:20px;">
-                <div style="flex:1; min-width:140px;">
-                    <h4 style="margin:0 0 8px; color:#b45a2a;">🔥 Quentes</h4>
-                    <div id="hotNumbers" class="text-muted">—</div>
+            <h2>🔥 Palpites adaptativos (10 melhores)</h2>
+            <p class="text-muted" style="margin-bottom:10px; font-size:0.82rem;">
+                Classificação: <b style="color:#b45a2a;">Quentes ≥ 1.80%</b> ·
+                <b style="color:#a0730a;">Mornos 1.60%–1.80%</b> ·
+                <b style="color:#1f4b7a;">Frios ≤ 1.60%</b>
+            </p>
+            <div style="display:flex; flex-wrap:wrap; gap:12px;">
+                <div class="cat-box">
+                    <h4 style="color:#b45a2a;">🔥 Quentes</h4>
+                    <div id="hotNumbers" class="cat-numbers text-muted">—</div>
+                    <div id="hotRange" class="cat-range"></div>
                 </div>
-                <div style="flex:1; min-width:140px;">
-                    <h4 style="margin:0 0 8px; color:#1f4b7a;">❄️ Frios</h4>
-                    <div id="coldNumbers" class="text-muted">—</div>
+                <div class="cat-box">
+                    <h4 style="color:#a0730a;">🌤️ Mornos</h4>
+                    <div id="mornoNumbers" class="cat-numbers text-muted">—</div>
+                    <div id="mornoRange" class="cat-range"></div>
+                </div>
+                <div class="cat-box">
+                    <h4 style="color:#1f4b7a;">❄️ Frios</h4>
+                    <div id="coldNumbers" class="cat-numbers text-muted">—</div>
+                    <div id="coldRange" class="cat-range"></div>
                 </div>
             </div>
             <hr style="margin:16px 0; border-color:#eaf0f8;" />
             <div>
-                <h4 style="margin:0 0 6px;">📌 Jogos sugeridos</h4>
-                <div id="suggestion" class="text-muted">Clique em "Gerar 15 palpites"</div>
-                <button class="btn btn-primary btn-sm mt-12" id="generateSuggestionBtn">🎯 Gerar 15 palpites</button>
+                <h4 style="margin:0 0 6px;">
+                    📌 Jogos sugeridos
+                    <small class="text-muted" style="font-weight:400;">
+                        (proporção Q/M/F conforme o histórico + P/I mais provável)
+                    </small>
+                </h4>
+                <div id="suggestion" class="text-muted">Clique em "Gerar 10 palpites"</div>
+                <div style="display:flex; flex-wrap:wrap; gap:8px; margin-top:12px;">
+                    <button class="btn btn-primary btn-sm" id="generateSuggestionBtn">🎯 Gerar 10 palpites</button>
+                    <button class="btn btn-success btn-sm" id="exportPalpitesBtn">📥 Exportar palpites TXT</button>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- ─── COMPARATIVO ─── -->
+    <div class="card">
+        <h2>⚖️ Padrão Pares / Ímpares <small>baseado nos seus resultados</small></h2>
+        <p class="text-muted" style="margin-bottom:12px; font-size:0.85rem;">
+            Combinações que mais saíram no histórico. Os palpites gerados dão preferência aos padrões destacados.
+        </p>
+        <div id="piContainer" class="pi-grid">
+            <p class="text-muted">Adicione resultados para ver o padrão P/I.</p>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>🎯 Padrão Quentes / Mornos / Frios <small>distribuição real dos sorteios</small></h2>
+        <p class="text-muted" style="margin-bottom:12px; font-size:0.85rem;">
+            Quantas dezenas quentes, mornas e frias apareceram em cada sorteio do seu histórico.
+            Os palpites são gerados <b>respeitando essa proporção</b> — não é mais fixo 2Q+2M+2F.
+        </p>
+        <div id="qmfContainer" class="pi-grid">
+            <p class="text-muted">Adicione resultados para ver a distribuição Q/M/F.</p>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>🏆 Backtest — Palpites vs Histórico <small>quão perto chegamos no passado</small></h2>
+        <p class="text-muted" style="margin-bottom:12px; font-size:0.85rem;">
+            Para cada sorteio, geramos palpites usando <b>apenas os dados anteriores</b> a ele
+            e comparamos com o resultado real. Destaque para o sorteio onde chegamos mais perto dos 6 acertos.
+        </p>
+
+        <div class="bt-legend">
+            <span class="item"><span class="dot quadra"></span> <b>Quadra</b> (4 acertos)</span>
+            <span class="item"><span class="dot quina"></span> <b>Quina</b> (5 acertos)</span>
+            <span class="item"><span class="dot sena"></span> <b>Sena</b> (6 acertos)</span>
+        </div>
+
+        <div class="seed-box">
+            <label for="seedInput">🎲 Seed:</label>
+            <input type="number" id="seedInput" value="12345" />
+            <button class="btn btn-outline btn-sm" id="randomSeedBtn">🎲 Aleatória</button>
+            <div class="hint">
+                💡 <b>Mesma seed = mesmos palpites = mesmos acertos.</b>
+                Use o botão <b>"📊 Testar 5 seeds"</b> abaixo para ver a <b>média real</b> da estratégia.
+            </div>
+        </div>
+
+        <div class="flex-between" style="margin-bottom:14px;">
+            <div class="flex-wrap gap-8">
+                <button class="btn btn-primary btn-sm" id="runBacktestBtn">🔍 Analisar histórico</button>
+                <button class="btn btn-purple btn-sm" id="runMultiSeedBtn">📊 Testar 5 seeds</button>
+                <label class="text-muted" style="font-size:0.85rem;">
+                    Sorteios a analisar:
+                    <select id="backtestLimit" style="padding:6px 10px;border-radius:8px;
+                        border:1.5px solid #dce3ef;margin-left:6px;background:#fafcff;">
+                        <option value="30">Últimos 30</option>
+                        <option value="50">Últimos 50</option>
+                        <option value="100">Últimos 100</option>
+                        <option value="300">Últimos 300</option>
+                        <option value="500">Últimos 500</option>
+                        <option value="1000" selected>Últimos 1000</option>
+                        <option value="0">Todos os disponíveis</option>
+                    </select>
+                </label>
+            </div>
+            <span class="text-muted" id="backtestStatus" style="font-size:0.85rem;"></span>
+        </div>
+        <div id="backtestContainer">
+            <p class="text-muted">Clique em "Analisar histórico" para ver os resultados.</p>
+        </div>
+    </div>
+
     <div class="card">
         <h2>📋 Comparativo com último resultado</h2>
         <p class="text-muted">Aqui você vê quantos números cada palpite gerado acertou no último sorteio cadastrado.</p>
@@ -428,7 +589,6 @@
         </div>
     </div>
 
-    <!-- ─── ANÁLISE ─── -->
     <div class="row">
         <div class="card">
             <h2>🧮 Análise por faixa</h2>
@@ -444,7 +604,6 @@
         </div>
     </div>
 
-    <!-- ─── IMPORTAR / EXPORTAR ─── -->
     <div class="card">
         <h2>📁 Importar / Exportar</h2>
         <div class="flex-between">
@@ -464,14 +623,29 @@
     (function() {
         'use strict';
 
-        // ─── Estado ───
+        let __seed = 12345;
+        function setSeed(s) { __seed = (s >>> 0) || 1; }
+        function rand() {
+            __seed |= 0;
+            __seed = (__seed + 0x6D2B79F5) | 0;
+            let t = __seed;
+            t = Math.imul(t ^ (t >>> 15), t | 1);
+            t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+            return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+        }
+
         const STORAGE_KEY = 'megasena_results';
         const PALPITES_KEY = 'megasena_palpites';
-        let results = [];             // array de { concurso, numeros: [6 números] }
-        let lastDeleted = null;       // para undo
-        let lastGeneratedPalpites = []; // array de arrays (15 jogos de 6 números)
+        const SEED_KEY = 'megasena_seed';
+        const QTD_PALPITES = 10;
+        const MULTI_SEEDS = [12345, 54321, 11111, 99999, 77777];
+        let results = [];
+        let lastDeleted = null;
+        let lastGeneratedPalpites = [];
 
-        // ─── DOM ───
+        const LIMITE_QUENTE = 1.80;
+        const LIMITE_FRIO   = 1.60;
+
         const $ = id => document.getElementById(id);
         const n1 = $('n1'), n2 = $('n2'), n3 = $('n3'), n4 = $('n4'), n5 = $('n5'), n6 = $('n6');
         const concursoInput = $('concursoInput');
@@ -482,9 +656,16 @@
         const lastDraw = $('lastDraw');
         const freqContainer = $('freqContainer');
         const hotNumbers = $('hotNumbers');
+        const mornoNumbers = $('mornoNumbers');
         const coldNumbers = $('coldNumbers');
+        const hotRange = $('hotRange');
+        const mornoRange = $('mornoRange');
+        const coldRange = $('coldRange');
         const suggestion = $('suggestion');
         const generateSuggestionBtn = $('generateSuggestionBtn');
+        const exportPalpitesBtn = $('exportPalpitesBtn');
+        const piContainer = $('piContainer');
+        const qmfContainer = $('qmfContainer');
         const rangeStats = $('rangeStats');
         const repeatedNumbers = $('repeatedNumbers');
         const exportBtn = $('exportBtn');
@@ -492,15 +673,16 @@
         const fileInput = $('fileInput');
         const undoBtn = $('undoBtn');
         const comparativoContainer = $('comparativoContainer');
+        const runBacktestBtn = $('runBacktestBtn');
+        const runMultiSeedBtn = $('runMultiSeedBtn');
+        const backtestLimit = $('backtestLimit');
+        const backtestStatus = $('backtestStatus');
+        const backtestContainer = $('backtestContainer');
+        const seedInput = $('seedInput');
+        const randomSeedBtn = $('randomSeedBtn');
 
-        // ─── Utilitários ───
-        function sortNumbers(arr) {
-            return [...arr].sort((a, b) => a - b);
-        }
-
-        function formatNumbers(arr) {
-            return arr.map(n => String(n).padStart(2, '0')).join(' · ');
-        }
+        const sortNumbers = arr => [...arr].sort((a, b) => a - b);
+        const formatNumbers = arr => arr.map(n => String(n).padStart(2, '0')).join(' · ');
 
         function isValidNumber(n) {
             const num = Number(n);
@@ -511,53 +693,54 @@
             const vals = [n1.value, n2.value, n3.value, n4.value, n5.value, n6.value];
             const nums = vals.map(v => Number(v.trim()));
             if (nums.some(n => !isValidNumber(n))) return null;
-            const unique = new Set(nums);
-            if (unique.size !== 6) return null;
+            if (new Set(nums).size !== 6) return null;
             return sortNumbers(nums);
         }
 
         function clearInputs() {
-            n1.value = ''; n2.value = ''; n3.value = ''; n4.value = ''; n5.value = ''; n6.value = '';
+            n1.value = n2.value = n3.value = n4.value = n5.value = n6.value = '';
             concursoInput.value = '';
         }
 
-        // ─── Persistência ───
         function loadFromStorage() {
-            const stored = localStorage.getItem(STORAGE_KEY);
-            if (stored) {
-                try {
-                    results = JSON.parse(stored);
-                    if (!Array.isArray(results)) results = [];
-                } catch (_) { results = []; }
-            } else {
-                results = [];
-            }
-            // garantir que cada entrada tenha numeros ordenados
-            results = results.filter(r => Array.isArray(r.numeros) && r.numeros.length === 6)
+            try {
+                const stored = localStorage.getItem(STORAGE_KEY);
+                results = stored ? JSON.parse(stored) : [];
+                if (!Array.isArray(results)) results = [];
+            } catch (_) { results = []; }
+
+            results = results
+                .filter(r => Array.isArray(r.numeros) && r.numeros.length === 6)
                 .map(r => ({ ...r, numeros: sortNumbers(r.numeros) }));
 
-            const palpitesStored = localStorage.getItem(PALPITES_KEY);
-            if (palpitesStored) {
-                try {
-                    lastGeneratedPalpites = JSON.parse(palpitesStored);
-                    if (!Array.isArray(lastGeneratedPalpites)) lastGeneratedPalpites = [];
-                } catch (_) { lastGeneratedPalpites = []; }
+            try {
+                const p = localStorage.getItem(PALPITES_KEY);
+                lastGeneratedPalpites = p ? JSON.parse(p) : [];
+                if (!Array.isArray(lastGeneratedPalpites)) lastGeneratedPalpites = [];
+            } catch (_) { lastGeneratedPalpites = []; }
+
+            try {
+                const s = Number(localStorage.getItem(SEED_KEY));
+                if (s && !isNaN(s)) {
+                    seedInput.value = s;
+                    setSeed(s);
+                } else {
+                    setSeed(Number(seedInput.value) || 12345);
+                }
+            } catch (_) {
+                setSeed(Number(seedInput.value) || 12345);
             }
         }
+        const saveToStorage = () => localStorage.setItem(STORAGE_KEY, JSON.stringify(results));
+        const savePalpitesToStorage = () => localStorage.setItem(PALPITES_KEY, JSON.stringify(lastGeneratedPalpites));
+        const saveSeedToStorage = () => localStorage.setItem(SEED_KEY, String(seedInput.value));
 
-        function saveToStorage() {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(results));
-        }
-
-        function savePalpitesToStorage() {
-            localStorage.setItem(PALPITES_KEY, JSON.stringify(lastGeneratedPalpites));
-        }
-
-        // ─── Render ───
         function renderAll() {
             renderResultsList();
             renderStats();
             renderPalpites();
+            renderPIDistribution();
+            renderQMFDistribution();
             renderRangeStats();
             renderRepeated();
             renderComparativo();
@@ -576,7 +759,6 @@
                 resultsList.innerHTML = '<span class="text-muted">Nenhum sorteio cadastrado.</span>';
                 return;
             }
-            // mostrar do mais recente para o mais antigo
             const reversed = [...results].reverse();
             for (const r of reversed) {
                 const chip = document.createElement('span');
@@ -599,15 +781,710 @@
             }
         }
 
-        // ─── Estatísticas de frequência ───
-        function getFrequencies() {
+        function getFrequencies(res = results) {
             const freq = new Array(61).fill(0);
-            for (const r of results) {
+            for (const r of res) for (const n of r.numeros) freq[n]++;
+            return freq;
+        }
+
+        function classifyNumbers(res = results) {
+            const freq = getFrequencies(res);
+            const totalNums = res.length * 6;
+
+            const stats = [];
+            for (let i = 1; i <= 60; i++) {
+                const f = freq[i] || 0;
+                const pct = totalNums > 0 ? (f / totalNums) * 100 : 0;
+                stats.push({ numero: i, freq: f, pct });
+            }
+
+            let quentes = [], mornos = [], frios = [];
+            for (const s of stats) {
+                if (s.pct >= LIMITE_QUENTE) quentes.push(s);
+                else if (s.pct <= LIMITE_FRIO) frios.push(s);
+                else mornos.push(s);
+            }
+
+            if (quentes.length < 6 || frios.length < 6 || mornos.length < 10) {
+                const sorted = [...stats].sort((a, b) => b.pct - a.pct || a.numero - b.numero);
+                quentes = sorted.slice(0, 15).map(s => ({ ...s, categoria: 'quente' }));
+                mornos  = sorted.slice(15, 45).map(s => ({ ...s, categoria: 'morno' }));
+                frios   = sorted.slice(45, 60).map(s => ({ ...s, categoria: 'frio' }));
+            } else {
+                quentes = quentes.map(s => ({ ...s, categoria: 'quente' }));
+                mornos  = mornos.map(s => ({ ...s, categoria: 'morno' }));
+                frios   = frios.map(s => ({ ...s, categoria: 'frio' }));
+            }
+
+            quentes.sort((a, b) => b.pct - a.pct || a.numero - b.numero);
+            mornos.sort((a, b) => b.pct - a.pct || a.numero - b.numero);
+            frios.sort((a, b) => b.pct - a.pct || a.numero - b.numero);
+
+            return { quentes, mornos, frios, stats };
+        }
+
+        const PI_KEYS = ['0P6I','1P5I','2P4I','3P3I','4P2I','5P1I','6P0I'];
+
+        function getPIDistribution(res = results) {
+            const dist = {};
+            PI_KEYS.forEach(k => dist[k] = 0);
+            for (const r of res) {
+                const pares = r.numeros.filter(n => n % 2 === 0).length;
+                const key = `${pares}P${6 - pares}I`;
+                if (dist[key] !== undefined) dist[key]++;
+            }
+            return dist;
+        }
+
+        function getTopPIPatterns(res = results) {
+            const dist = getPIDistribution(res);
+            const arr = PI_KEYS.map(k => ({ key: k, count: dist[k] }));
+            arr.sort((a, b) => b.count - a.count);
+            const top = arr.filter(x => x.count > 0).slice(0, 3);
+            if (top.length === 0) return ['2P4I','3P3I','4P2I'];
+            return top.map(x => x.key);
+        }
+
+        function getQMFDistribution(res = results) {
+            const dist = {};
+            if (res.length === 0) return dist;
+
+            const { quentes, mornos, frios } = classifyNumbers(res);
+            const qSet = new Set(quentes.map(x => x.numero));
+            const mSet = new Set(mornos.map(x => x.numero));
+            const fSet = new Set(frios.map(x => x.numero));
+
+            for (const r of res) {
+                let q = 0, m = 0, f = 0;
                 for (const n of r.numeros) {
-                    freq[n] = (freq[n] || 0) + 1;
+                    if (qSet.has(n)) q++;
+                    else if (mSet.has(n)) m++;
+                    else if (fSet.has(n)) f++;
+                    else f++;
+                }
+                const key = `${q}Q${m}M${f}F`;
+                dist[key] = (dist[key] || 0) + 1;
+            }
+            return dist;
+        }
+
+        function parseQMFKey(key) {
+            const match = key.match(/(\d+)Q(\d+)M(\d+)F/);
+            if (!match) return { q: 2, m: 2, f: 2 };
+            return { q: Number(match[1]), m: Number(match[2]), f: Number(match[3]) };
+        }
+
+        const formatQMFKey = (q, m, f) => `${q}Q·${m}M·${f}F`;
+
+        function pickQMFPattern(dist) {
+            const entries = Object.entries(dist).filter(([, v]) => v > 0);
+            if (entries.length === 0) return { q: 2, m: 2, f: 2 };
+            const total = entries.reduce((s, [, v]) => s + v, 0);
+            let r = rand() * total;
+            for (const [key, count] of entries) {
+                r -= count;
+                if (r <= 0) return parseQMFKey(key);
+            }
+            return parseQMFKey(entries[entries.length - 1][0]);
+        }
+
+        function pickRandom(arr, n) {
+            const copy = [...arr];
+            const out = [];
+            for (let i = 0; i < n && copy.length > 0; i++) {
+                const idx = Math.floor(rand() * copy.length);
+                out.push(copy.splice(idx, 1)[0]);
+            }
+            return out;
+        }
+
+        function getPI(nums) {
+            const pares = nums.filter(n => n % 2 === 0).length;
+            return `${pares}P${6 - pares}I`;
+        }
+
+        function validarPalpite(nums, topPI) {
+            const soma = nums.reduce((a, b) => a + b, 0);
+            if (soma < 150 || soma > 220) return false;
+            const pi = getPI(nums);
+            if (!topPI.includes(pi)) return false;
+            let consec = 0;
+            for (let i = 0; i < nums.length - 1; i++) {
+                if (nums[i + 1] - nums[i] === 1) consec++;
+            }
+            if (consec > 2) return false;
+            if (nums[5] - nums[0] < 25) return false;
+            const baixos = nums.filter(n => n <= 30).length;
+            if (baixos < 2 || baixos > 4) return false;
+            return true;
+        }
+
+        function gerarPalpiteAdaptativo(qNums, mNums, fNums, topPI, qmfDist) {
+            const pattern = pickQMFPattern(qmfDist);
+            let q = Math.min(pattern.q, qNums.length);
+            let m = Math.min(pattern.m, mNums.length);
+            let f = Math.min(pattern.f, fNums.length);
+            let falta = 6 - (q + m + f);
+            while (falta > 0) {
+                if (qNums.length > q) { q++; falta--; }
+                else if (mNums.length > m) { m++; falta--; }
+                else if (fNums.length > f) { f++; falta--; }
+                else break;
+            }
+
+            let jogo = [];
+            for (let t = 0; t < 400; t++) {
+                jogo = [
+                    ...pickRandom(qNums, q),
+                    ...pickRandom(mNums, m),
+                    ...pickRandom(fNums, f)
+                ];
+                if (jogo.length === 6 && new Set(jogo).size === 6) {
+                    jogo.sort((a, b) => a - b);
+                    if (validarPalpite(jogo, topPI)) return jogo;
                 }
             }
-            return freq;
+            for (let t = 0; t < 200; t++) {
+                jogo = [
+                    ...pickRandom(qNums, q),
+                    ...pickRandom(mNums, m),
+                    ...pickRandom(fNums, f)
+                ];
+                if (jogo.length === 6 && new Set(jogo).size === 6) {
+                    jogo.sort((a, b) => a - b);
+                    const soma = jogo.reduce((a, b) => a + b, 0);
+                    const pi = getPI(jogo);
+                    if (soma >= 140 && soma <= 230 && topPI.includes(pi)) return jogo;
+                }
+            }
+            return jogo.sort((a, b) => a - b);
+        }
+
+        function gerarPalpitesDe(res, qty) {
+            if (res.length === 0) return [];
+            const { quentes, mornos, frios } = classifyNumbers(res);
+            const qNums = quentes.map(x => x.numero);
+            const mNums = mornos.map(x => x.numero);
+            const fNums = frios.map(x => x.numero);
+            const topPI = getTopPIPatterns(res);
+            const qmfDist = getQMFDistribution(res);
+
+            const jogos = [];
+            const vistos = new Set();
+            let tentativas = 0;
+
+            while (jogos.length < qty && tentativas < 800) {
+                tentativas++;
+                const jogo = gerarPalpiteAdaptativo(qNums, mNums, fNums, topPI, qmfDist);
+                const chave = jogo.join('-');
+                if (!vistos.has(chave)) {
+                    vistos.add(chave);
+                    jogos.push(jogo);
+                }
+            }
+            return jogos;
+        }
+
+        function runBacktest() {
+            const MIN_DRAWS = 15;
+            const limit = Number(backtestLimit.value);
+
+            if (results.length < MIN_DRAWS + 1) {
+                backtestContainer.innerHTML = `<p class="text-muted">
+                    Cadastre ao menos ${MIN_DRAWS + 1} sorteios para rodar o backtest.
+                </p>`;
+                return;
+            }
+
+            const startIdx = limit > 0
+                ? Math.max(MIN_DRAWS, results.length - limit)
+                : MIN_DRAWS;
+            const total = results.length - startIdx;
+
+            if (total <= 0) {
+                backtestContainer.innerHTML = `<p class="text-muted">
+                    Não há sorteios suficientes para análise com os dados atuais.
+                </p>`;
+                return;
+            }
+
+            const seedVal = Number(seedInput.value) || 12345;
+            setSeed(seedVal);
+            saveSeedToStorage();
+
+            runBacktestBtn.disabled = true;
+            runMultiSeedBtn.disabled = true;
+            backtestStatus.textContent = `⏳ Analisando ${total} sorteios (seed ${seedVal})...`;
+
+            backtestContainer.innerHTML = `
+                <div class="bt-progress-wrap">
+                    <div class="bt-progress-info">
+                        <span>Processando backtest...</span>
+                        <span id="btProgressText">0 / ${total}</span>
+                    </div>
+                    <div class="bt-progress">
+                        <div class="bar" id="btBar">0%</div>
+                    </div>
+                    <p class="text-muted" style="margin-top:10px;font-size:0.8rem;">
+                        💡 Seed atual: <b>${seedVal}</b>. Mesma seed = mesmos palpites = mesmos acertos.
+                    </p>
+                </div>
+            `;
+
+            const btResults = [];
+            const CHUNK_SIZE = 20;
+            let currentIdx = startIdx;
+            const startTime = Date.now();
+
+            function processChunk() {
+                const end = Math.min(currentIdx + CHUNK_SIZE, results.length);
+                for (let i = currentIdx; i < end; i++) {
+                    const passado = results.slice(0, i);
+                    const real = results[i];
+                    const palpites = gerarPalpitesDe(passado, QTD_PALPITES);
+                    if (palpites.length === 0) continue;
+                    const realSet = new Set(real.numeros);
+                    let bestHits = 0;
+                    let bestPalpite = null;
+                    for (const p of palpites) {
+                        const hits = p.filter(n => realSet.has(n)).length;
+                        if (hits > bestHits) {
+                            bestHits = hits;
+                            bestPalpite = p;
+                        }
+                    }
+                    btResults.push({
+                        index: i,
+                        concurso: real.concurso || `Sorteio ${i + 1}`,
+                        numeros: real.numeros,
+                        bestHits,
+                        bestPalpite
+                    });
+                }
+
+                currentIdx = end;
+                const processed = currentIdx - startIdx;
+                const progress = Math.round((processed / total) * 100);
+
+                const bar = document.getElementById('btBar');
+                const progressText = document.getElementById('btProgressText');
+                if (bar) {
+                    bar.style.width = progress + '%';
+                    if (progress >= 8) bar.textContent = progress + '%';
+                }
+                if (progressText) progressText.textContent = `${processed} / ${total}`;
+
+                if (currentIdx < results.length) {
+                    setTimeout(processChunk, 0);
+                } else {
+                    const elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
+                    renderBacktest(btResults, seedVal);
+                    backtestStatus.textContent = `✅ ${btResults.length} sorteios em ${elapsed}s (seed ${seedVal})`;
+                    runBacktestBtn.disabled = false;
+                    runMultiSeedBtn.disabled = false;
+                }
+            }
+            setTimeout(processChunk, 50);
+        }
+
+        function runMultiSeedBacktest() {
+            const MIN_DRAWS = 15;
+            const limit = Number(backtestLimit.value);
+
+            if (results.length < MIN_DRAWS + 1) {
+                backtestContainer.innerHTML = `<p class="text-muted">
+                    Cadastre ao menos ${MIN_DRAWS + 1} sorteios para rodar o backtest.
+                </p>`;
+                return;
+            }
+
+            const startIdx = limit > 0
+                ? Math.max(MIN_DRAWS, results.length - limit)
+                : MIN_DRAWS;
+            const totalPerSeed = results.length - startIdx;
+
+            if (totalPerSeed <= 0) {
+                backtestContainer.innerHTML = `<p class="text-muted">
+                    Não há sorteios suficientes para análise com os dados atuais.
+                </p>`;
+                return;
+            }
+
+            const totalGeral = totalPerSeed * MULTI_SEEDS.length;
+
+            runBacktestBtn.disabled = true;
+            runMultiSeedBtn.disabled = true;
+            backtestStatus.textContent = `⏳ Rodando 5 seeds × ${totalPerSeed} sorteios...`;
+
+            backtestContainer.innerHTML = `
+                <div class="bt-progress-wrap">
+                    <div class="bt-progress-info">
+                        <span id="multiSeedLabel">Seed ${MULTI_SEEDS[0]} — iniciando...</span>
+                        <span id="multiProgressText">0 / ${totalGeral}</span>
+                    </div>
+                    <div class="bt-progress">
+                        <div class="bar purple" id="multiBar">0%</div>
+                    </div>
+                    <p class="text-muted" style="margin-top:10px;font-size:0.8rem;">
+                        💡 Rodando <b>5 seeds diferentes</b> para descobrir a <b>média real</b> da estratégia.
+                        Aguarde — pode levar alguns minutos com 1000 sorteios.
+                    </p>
+                </div>
+            `;
+
+            const allSeedResults = [];
+            const CHUNK_SIZE = 20;
+            const startTime = Date.now();
+
+            let seedIdx = 0;
+            let currentIdx = startIdx;
+            let btResults = [];
+
+            setSeed(MULTI_SEEDS[0]);
+
+            function processChunk() {
+                const seedVal = MULTI_SEEDS[seedIdx];
+                const end = Math.min(currentIdx + CHUNK_SIZE, results.length);
+
+                for (let i = currentIdx; i < end; i++) {
+                    const passado = results.slice(0, i);
+                    const real = results[i];
+                    const palpites = gerarPalpitesDe(passado, QTD_PALPITES);
+                    if (palpites.length === 0) continue;
+                    const realSet = new Set(real.numeros);
+                    let bestHits = 0;
+                    let bestPalpite = null;
+                    for (const p of palpites) {
+                        const hits = p.filter(n => realSet.has(n)).length;
+                        if (hits > bestHits) {
+                            bestHits = hits;
+                            bestPalpite = p;
+                        }
+                    }
+                    btResults.push({
+                        index: i,
+                        concurso: real.concurso || `Sorteio ${i + 1}`,
+                        numeros: real.numeros,
+                        bestHits,
+                        bestPalpite
+                    });
+                }
+
+                currentIdx = end;
+                const processed = seedIdx * totalPerSeed + (currentIdx - startIdx);
+                const progress = Math.round((processed / totalGeral) * 100);
+
+                const bar = document.getElementById('multiBar');
+                const progressText = document.getElementById('multiProgressText');
+                const label = document.getElementById('multiSeedLabel');
+                if (bar) {
+                    bar.style.width = progress + '%';
+                    if (progress >= 8) bar.textContent = progress + '%';
+                }
+                if (progressText) progressText.textContent = `${processed} / ${totalGeral}`;
+                if (label) {
+                    label.textContent = `Seed ${seedVal} (${seedIdx + 1}/${MULTI_SEEDS.length}) — ${currentIdx - startIdx} / ${totalPerSeed}`;
+                }
+
+                if (currentIdx < results.length) {
+                    setTimeout(processChunk, 0);
+                } else {
+                    allSeedResults.push({
+                        seed: seedVal,
+                        btResults: [...btResults]
+                    });
+
+                    seedIdx++;
+
+                    if (seedIdx < MULTI_SEEDS.length) {
+                        setSeed(MULTI_SEEDS[seedIdx]);
+                        currentIdx = startIdx;
+                        btResults = [];
+                        setTimeout(processChunk, 0);
+                    } else {
+                        const elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
+                        renderMultiSeedBacktest(allSeedResults, totalPerSeed, elapsed);
+                        backtestStatus.textContent = `✅ 5 seeds × ${totalPerSeed} sorteios em ${elapsed}s`;
+                        runBacktestBtn.disabled = false;
+                        runMultiSeedBtn.disabled = false;
+                    }
+                }
+            }
+            setTimeout(processChunk, 50);
+        }
+
+        function summarizeSeedResults(btResults) {
+            const total = btResults.length;
+            const dist = { 0:0, 1:0, 2:0, 3:0, 4:0, 5:0, 6:0 };
+            btResults.forEach(b => dist[b.bestHits]++);
+            const somaHits = btResults.reduce((s, b) => s + b.bestHits, 0);
+            const maxHits = Math.max(...btResults.map(b => b.bestHits));
+            return {
+                total,
+                dist,
+                media: total > 0 ? somaHits / total : 0,
+                maxHits,
+                quadras: dist[4],
+                quinas: dist[5],
+                senas: dist[6]
+            };
+        }
+
+        function renderMultiSeedBacktest(allSeedResults, totalPerSeed, elapsed) {
+            const summaries = allSeedResults.map(sr => ({
+                seed: sr.seed,
+                ...summarizeSeedResults(sr.btResults)
+            }));
+
+            const n = summaries.length;
+            const avgQuadras = summaries.reduce((s, x) => s + x.quadras, 0) / n;
+            const avgQuinas = summaries.reduce((s, x) => s + x.quinas, 0) / n;
+            const avgSenas = summaries.reduce((s, x) => s + x.senas, 0) / n;
+            const avgMedia = summaries.reduce((s, x) => s + x.media, 0) / n;
+            const varQuadras = summaries.reduce((s, x) => s + Math.pow(x.quadras - avgQuadras, 2), 0) / n;
+            const dpQuadras = Math.sqrt(varQuadras);
+
+            const bestQuadras = Math.max(...summaries.map(s => s.quadras));
+            const bestQuinas = Math.max(...summaries.map(s => s.quinas));
+            const bestSenas = Math.max(...summaries.map(s => s.senas));
+
+            let html = '';
+
+            html += `<div style="margin-bottom:14px;padding:12px 16px;background:#f0f5fe;
+                border:1.5px solid #2e5a8a;border-radius:12px;font-size:0.88rem;color:#1e3a5f;">
+                🧪 <b>Análise multi-seed:</b> rodamos a <b>mesma estratégia</b> com
+                <b>${n} seeds diferentes</b> em ${totalPerSeed} sorteios cada.
+                O que importa aqui é a <b>média</b> — não o melhor resultado individual.
+            </div>`;
+
+            html += '<h4 style="margin:0 0 10px;font-size:0.95rem;color:#0b2a44;">📊 Média real da estratégia (entre as 5 seeds)</h4>';
+            html += '<div class="bt-summary">';
+            html += `<div class="bt-stat quadra">
+                <div class="bt-label">🥈 Quadras (média)</div>
+                <div class="bt-value">${avgQuadras.toFixed(1)}</div>
+            </div>`;
+            html += `<div class="bt-stat quina">
+                <div class="bt-label">🥇 Quinas (média)</div>
+                <div class="bt-value">${avgQuinas.toFixed(1)}</div>
+            </div>`;
+            html += `<div class="bt-stat sena">
+                <div class="bt-label">🏆 Senas (média)</div>
+                <div class="bt-value">${avgSenas.toFixed(2)}</div>
+            </div>`;
+            html += `<div class="bt-stat green">
+                <div class="bt-label">Média de acertos</div>
+                <div class="bt-value">${avgMedia.toFixed(2)}</div>
+            </div>`;
+            html += `<div class="bt-stat">
+                <div class="bt-label">Desvio padrão (quadras)</div>
+                <div class="bt-value">± ${dpQuadras.toFixed(1)}</div>
+            </div>`;
+            html += '</div>';
+
+            html += '<h4 style="margin:14px 0 10px;font-size:0.95rem;color:#0b2a44;">📋 Desempenho individual por seed</h4>';
+            html += '<table class="seed-table"><thead><tr>';
+            html += '<th>Seed</th><th>Quadras 🥈</th><th>Quinas 🥇</th><th>Senas 🏆</th><th>Média acertos</th><th>Melhor</th>';
+            html += '</tr></thead><tbody>';
+
+            summaries.forEach(s => {
+                const isBestQ = s.quadras === bestQuadras;
+                const isBestQn = s.quinas === bestQuinas;
+                const isBestS = s.senas === bestSenas;
+                const anyBest = isBestQ || isBestQn || isBestS;
+
+                let medal = '';
+                if (isBestS && bestSenas > 0) medal = ' 🏆';
+                else if (isBestQn && bestQuinas > 0) medal = ' 🥇';
+                else if (isBestQ && bestQuadras > 0) medal = ' 🥈';
+
+                html += `<tr class="${anyBest ? 'best' : ''}">
+                    <td class="seed-num">${s.seed}${medal}</td>
+                    <td>${s.quadras}</td>
+                    <td>${s.quinas}</td>
+                    <td>${s.senas}</td>
+                    <td>${s.media.toFixed(2)}</td>
+                    <td>${s.maxHits}</td>
+                </tr>`;
+            });
+
+            html += `<tr class="avg-row">
+                <td>MÉDIA</td>
+                <td>${avgQuadras.toFixed(1)}</td>
+                <td>${avgQuinas.toFixed(1)}</td>
+                <td>${avgSenas.toFixed(2)}</td>
+                <td>${avgMedia.toFixed(2)}</td>
+                <td>—</td>
+            </tr>`;
+
+            html += '</tbody></table>';
+
+            html += `<div class="edu-note">
+                <b>🧠 O que isso significa:</b><br>
+                • A <b>média das 5 seeds</b> (${avgQuadras.toFixed(1)} quadras, ${avgQuinas.toFixed(1)} quinas, ${avgSenas.toFixed(2)} senas)
+                  é o <b>desempenho real esperado</b> da estratégia em ${totalPerSeed} sorteios futuros.<br>
+                • A seed individual que "ganhou" (com ${bestQuadras} quadras) <b>não vai se repetir no futuro</b> — foi sorte estatística.<br>
+                • O <b>desvio padrão de ±${dpQuadras.toFixed(1)} quadras</b> mostra a variação natural entre seeds.
+                  Um intervalo entre ${(avgQuadras - dpQuadras).toFixed(0)} e ${(avgQuadras + dpQuadras).toFixed(0)} quadras é perfeitamente normal.<br>
+                • Use qualquer seed para gerar seus palpites — <b>todas têm a mesma probabilidade real</b>.
+                  A escolha da seed é apenas para <b>reproduzir análises</b>, não para prever o futuro.
+            </div>`;
+
+            backtestContainer.innerHTML = html;
+        }
+
+        function getHitLevel(hits) {
+            if (hits === 6) return { cls: 'sena', medal: '🏆', label: 'SENA' };
+            if (hits === 5) return { cls: 'quina', medal: '🥇', label: 'QUINA' };
+            if (hits === 4) return { cls: 'quadra', medal: '🥈', label: 'QUADRA' };
+            return { cls: '', medal: '', label: '' };
+        }
+
+        function getBallHitClass(hits) {
+            if (hits === 6) return 'hit-sena';
+            if (hits === 5) return 'hit-quina';
+            if (hits === 4) return 'hit-quadra';
+            return 'hit-ball';
+        }
+
+        function renderBacktest(btResults, seedVal) {
+            if (btResults.length === 0) {
+                backtestContainer.innerHTML = '<p class="text-muted">Não foi possível analisar.</p>';
+                return;
+            }
+
+            const total = btResults.length;
+            const maxHits = Math.max(...btResults.map(b => b.bestHits));
+            const somaHits = btResults.reduce((s, b) => s + b.bestHits, 0);
+            const mediaHits = (somaHits / total).toFixed(2);
+
+            const dist = { 0:0, 1:0, 2:0, 3:0, 4:0, 5:0, 6:0 };
+            btResults.forEach(b => dist[b.bestHits]++);
+
+            const sorted = [...btResults].sort((a, b) => b.bestHits - a.bestHits ||
+                (a.index - b.index));
+            const topDraws = sorted.slice(0, 5);
+
+            let html = '';
+
+            html += `<div style="margin-bottom:14px;padding:8px 12px;background:#fffaf0;
+                border:1.5px solid #f5c344;border-radius:10px;font-size:0.85rem;color:#8a5a00;">
+                🎲 <b>Seed usada:</b> <code style="background:#fff;padding:2px 8px;
+                border-radius:6px;font-weight:700;">${seedVal}</code>
+                — mesmos dados + mesma seed = mesmos resultados.
+            </div>`;
+
+            html += '<div class="bt-summary">';
+            html += `<div class="bt-stat"><div class="bt-label">Sorteios analisados</div>
+                <div class="bt-value">${total}</div></div>`;
+            html += `<div class="bt-stat green"><div class="bt-label">Média de acertos</div>
+                <div class="bt-value">${mediaHits}</div></div>`;
+            html += `<div class="bt-stat gold"><div class="bt-label">Recorde de acertos</div>
+                <div class="bt-value">${maxHits}</div></div>`;
+            html += '</div>';
+
+            html += '<div class="bt-summary">';
+            html += `<div class="bt-stat quadra">
+                <div class="bt-label">🥈 Quadras (4 acertos)</div>
+                <div class="bt-value">${dist[4]}</div>
+            </div>`;
+            html += `<div class="bt-stat quina">
+                <div class="bt-label">🥇 Quinas (5 acertos)</div>
+                <div class="bt-value">${dist[5]}</div>
+            </div>`;
+            html += `<div class="bt-stat sena">
+                <div class="bt-label">🏆 Senas (6 acertos)</div>
+                <div class="bt-value">${dist[6]}</div>
+            </div>`;
+            html += '</div>';
+
+            html += '<h4 style="margin:0 0 8px;font-size:0.95rem;color:#0b2a44;">📊 Distribuição dos melhores acertos por sorteio</h4>';
+            html += '<div class="bt-hit-dist">';
+            for (let h = 0; h <= 6; h++) {
+                const pct = ((dist[h] / total) * 100).toFixed(1);
+                const lvl = getHitLevel(h);
+                let cls = lvl.cls;
+                let tagHtml = '';
+                if (h === 4) tagHtml = '<div class="tag-premio">🥈 QUADRA</div>';
+                if (h === 5) tagHtml = '<div class="tag-premio">🥇 QUINA</div>';
+                if (h === 6) tagHtml = '<div class="tag-premio">🏆 SENA</div>';
+
+                html += `<div class="bt-hit-item ${cls}">
+                    <div class="h">${h} acerto${h !== 1 ? 's' : ''}</div>
+                    <div class="c">${dist[h]}</div>
+                    <div class="p">${pct}%</div>
+                    ${tagHtml}
+                </div>`;
+            }
+            html += '</div>';
+
+            html += '<h4 style="margin:14px 0 10px;font-size:0.95rem;color:#0b2a44;">🏆 TOP 5 — sorteios onde mais chegamos perto</h4>';
+            html += '<div class="bt-top-list">';
+
+            topDraws.forEach((bt, idx) => {
+                const lvl = getHitLevel(bt.bestHits);
+                const drawCls = lvl.cls ? `draw-${lvl.cls}` : '';
+                const realSet = new Set(bt.numeros);
+
+                const realBalls = bt.numeros.map(n =>
+                    `<span class="mini-ball cold-ball">${String(n).padStart(2, '0')}</span>`
+                ).join('');
+
+                const bestBalls = bt.bestPalpite.map(n => {
+                    const isHit = realSet.has(n);
+                    const hitCls = isHit ? getBallHitClass(bt.bestHits) : 'morno-ball';
+                    return `<span class="mini-ball ${hitCls}">${String(n).padStart(2, '0')}</span>`;
+                }).join('');
+
+                const medalHtml = lvl.medal ? `<span class="bt-medal">${lvl.medal}</span>` : '';
+                const premioTag = lvl.label
+                    ? `<span style="font-weight:700;color:#5a4400;font-size:0.78rem;
+                        background:${lvl.cls === 'sena' ? '#ffe1e1' : lvl.cls === 'quina' ? '#fff5d6' : '#e8f7ee'};
+                        padding:2px 10px;border-radius:20px;border:1px solid
+                        ${lvl.cls === 'sena' ? '#c0392b' : lvl.cls === 'quina' ? '#d4a017' : '#1f8b4c'};">
+                        ${lvl.label}</span>`
+                    : '';
+
+                html += `<div class="bt-draw ${drawCls}">
+                    <div class="bt-head">
+                        <span class="rank">${idx === 0 ? '★ MELHOR' : '#' + (idx + 1)}</span>
+                        <span class="concurso">${bt.concurso}</span>
+                        ${medalHtml}
+                        ${premioTag}
+                        <span class="hits-badge">${bt.bestHits} acerto${bt.bestHits !== 1 ? 's' : ''}</span>
+                    </div>
+                    <div class="bt-line">
+                        <span class="lbl">Resultado real:</span>
+                        ${realBalls}
+                    </div>
+                    <div class="bt-line">
+                        <span class="lbl">Melhor palpite:</span>
+                        ${bestBalls}
+                    </div>
+                </div>`;
+            });
+
+            html += '</div>';
+
+            let nota;
+            if (dist[6] > 0) {
+                nota = `🏆 <b>INCRÍVEL!</b> Conseguimos a <b>SENA</b> em ${dist[6]} sorteio(s) histórico(s)!`;
+            } else if (dist[5] > 0) {
+                nota = `🥇 <b>Excelente!</b> Chegamos à <b>QUINA</b> em ${dist[5]} sorteio(s) — e ainda ${dist[4]} quadra(s).`;
+            } else if (dist[4] > 0) {
+                nota = `🥈 <b>Bom resultado!</b> Chegamos à <b>QUADRA</b> em ${dist[4]} sorteio(s) do histórico.`;
+            } else {
+                nota = `💡 O melhor desempenho chegou a <b>${maxHits} acertos</b>. Cadastre mais sorteios para ver padrões mais fortes.`;
+            }
+
+            const borderColor = dist[6] > 0 ? '#c0392b' : dist[5] > 0 ? '#d4a017' : dist[4] > 0 ? '#1f8b4c' : '#d0d9e8';
+            const bgColor = dist[6] > 0 ? '#ffe1e1' : dist[5] > 0 ? '#fff5d6' : dist[4] > 0 ? '#e8f7ee' : '#f0f5fe';
+
+            html += `<div style="margin-top:14px;padding:10px 14px;background:${bgColor};
+                border:1px solid ${borderColor};border-radius:12px;font-size:0.9rem;color:#334e6e;">
+                ${nota}
+            </div>`;
+
+            backtestContainer.innerHTML = html;
         }
 
         function renderStats() {
@@ -616,18 +1493,24 @@
                 return;
             }
             const freq = getFrequencies();
-            // Ordenar por frequência crescente (menor primeiro)
             const sortedNumbers = [];
             for (let i = 1; i <= 60; i++) sortedNumbers.push({ numero: i, freq: freq[i] || 0 });
             sortedNumbers.sort((a, b) => a.freq - b.freq || a.numero - b.numero);
             const max = Math.max(...sortedNumbers.map(x => x.freq), 1);
+
             let html = '<table><thead><tr><th>Nº</th><th>Freq.</th><th>%</th><th></th></tr></thead><tbody>';
             for (const item of sortedNumbers) {
                 const f = item.freq;
-                const pct = results.length > 0 ? ((f / (results.length * 6)) * 100).toFixed(1) : '0.0';
+                const pct = results.length > 0 ? ((f / (results.length * 6)) * 100).toFixed(2) : '0.00';
                 const bar = results.length > 0 ? Math.round((f / max) * 100) : 0;
+                let badgeClass = 'number-badge';
+                const pctNum = Number(pct);
+                if (pctNum >= LIMITE_QUENTE) badgeClass += ' hot';
+                else if (pctNum <= LIMITE_FRIO) badgeClass += ' cold';
+                else badgeClass += ' morno';
+
                 html += `<tr>
-                    <td><span class="number-badge">${String(item.numero).padStart(2,'0')}</span></td>
+                    <td><span class="${badgeClass}">${String(item.numero).padStart(2,'0')}</span></td>
                     <td>${f}</td>
                     <td>${pct}%</td>
                     <td><div class="stat-bar"><div class="fill" style="width:${bar}%;"></div></div></td>
@@ -637,84 +1520,229 @@
             freqContainer.innerHTML = html;
         }
 
-        // ─── Palpites (quentes / frios) ───
         function renderPalpites() {
             if (results.length === 0) {
-                hotNumbers.textContent = '—';
-                coldNumbers.textContent = '—';
+                hotNumbers.textContent = mornoNumbers.textContent = coldNumbers.textContent = '—';
+                hotRange.textContent = mornoRange.textContent = coldRange.textContent = '';
                 suggestion.innerHTML = '<span class="text-muted">Adicione resultados primeiro.</span>';
                 return;
             }
-            const freq = getFrequencies();
-            // lista de 1..60 com { numero, freq }
-            const list = [];
-            for (let i = 1; i <= 60; i++) list.push({ numero: i, freq: freq[i] || 0 });
-
-            // ordenar por frequência (decrescente) e pegar top 6
-            const sorted = [...list].sort((a, b) => b.freq - a.freq || a.numero - b.numero);
-            const top6 = sorted.slice(0, 6).map(x => x.numero);
-            hotNumbers.innerHTML = top6.map(n => `<span class="number-badge hot">${String(n).padStart(2,'0')}</span>`).join(' ');
-
-            // frios: os que estão há mais tempo sem aparecer (menor frequência)
-            const bottom6 = sorted.slice(-6).map(x => x.numero).sort((a,b)=>a-b);
-            coldNumbers.innerHTML = bottom6.map(n => `<span class="number-badge cold">${String(n).padStart(2,'0')}</span>`).join(' ');
+            const { quentes, mornos, frios } = classifyNumbers();
+            hotNumbers.innerHTML = quentes.slice(0, 10).map(x =>
+                `<span class="number-badge hot" title="${x.pct.toFixed(2)}%">${String(x.numero).padStart(2,'0')}</span>`
+            ).join('');
+            mornoNumbers.innerHTML = mornos.slice(0, 14).map(x =>
+                `<span class="number-badge morno" title="${x.pct.toFixed(2)}%">${String(x.numero).padStart(2,'0')}</span>`
+            ).join('');
+            coldNumbers.innerHTML = frios.slice(0, 10).map(x =>
+                `<span class="number-badge cold" title="${x.pct.toFixed(2)}%">${String(x.numero).padStart(2,'0')}</span>`
+            ).join('');
+            const rangeText = arr => {
+                if (!arr.length) return '';
+                const min = Math.min(...arr.map(x => x.pct)).toFixed(2);
+                const max = Math.max(...arr.map(x => x.pct)).toFixed(2);
+                return `Faixa: ${min}% – ${max}% (${arr.length} dezenas)`;
+            };
+            hotRange.textContent = rangeText(quentes);
+            mornoRange.textContent = rangeText(mornos);
+            coldRange.textContent = rangeText(frios);
         }
 
-        // ─── Gerar 15 palpites ───
+        function renderPIDistribution() {
+            if (results.length === 0) {
+                piContainer.innerHTML = '<p class="text-muted">Adicione resultados para ver o padrão P/I.</p>';
+                return;
+            }
+            const dist = getPIDistribution();
+            const total = results.length;
+            const arr = PI_KEYS.map(k => ({ key: k, count: dist[k] }));
+            const sortedByCount = [...arr].sort((a, b) => b.count - a.count);
+            const topKeys = sortedByCount.slice(0, 3).filter(x => x.count > 0).map(x => x.key);
+
+            let html = '';
+            for (const item of arr) {
+                const pct = total > 0 ? ((item.count / total) * 100).toFixed(1) : '0.0';
+                const isTop = topKeys.includes(item.key);
+                html += `<div class="pi-card ${isTop ? 'top' : ''}">
+                    ${isTop ? '<span class="pi-tag">TOP</span>' : ''}
+                    <div class="pi-label">${item.key}</div>
+                    <div class="pi-count">${item.count}</div>
+                    <div class="pi-pct">${pct}% dos jogos</div>
+                </div>`;
+            }
+            const topStr = topKeys.length ? topKeys.join(' · ') : '—';
+            html += `<div style="grid-column: 1/-1; margin-top: 8px; padding: 10px 12px;
+                background: #f0f5fe; border: 1px solid #d0d9e8; border-radius: 12px;
+                font-size: 0.85rem; color: #334e6e;">
+                <b>💡 Padrões mais prováveis:</b>
+                <span class="pi-highlight">${topStr}</span> — os palpites gerados vão dar prioridade a essas combinações.
+            </div>`;
+            piContainer.innerHTML = html;
+        }
+
+        function renderQMFDistribution() {
+            if (results.length === 0) {
+                qmfContainer.innerHTML = '<p class="text-muted">Adicione resultados para ver a distribuição Q/M/F.</p>';
+                return;
+            }
+            const dist = getQMFDistribution();
+            const total = results.length;
+            const entries = Object.entries(dist).sort((a, b) => b[1] - a[1]);
+
+            if (entries.length === 0) {
+                qmfContainer.innerHTML = '<p class="text-muted">Sem dados suficientes.</p>';
+                return;
+            }
+
+            const topKeys = entries.slice(0, 3).map(e => e[0]);
+
+            let html = '';
+            for (const [key, count] of entries) {
+                const pct = ((count / total) * 100).toFixed(1);
+                const isTop = topKeys.includes(key);
+                const { q, m, f } = parseQMFKey(key);
+                html += `<div class="pi-card ${isTop ? 'top' : ''}">
+                    ${isTop ? '<span class="pi-tag">TOP</span>' : ''}
+                    <div class="pi-label" style="font-size:0.9rem;">${formatQMFKey(q, m, f)}</div>
+                    <div class="pi-count">${count}</div>
+                    <div class="pi-pct">${pct}% dos sorteios</div>
+                </div>`;
+            }
+
+            const topStr = topKeys.map(k => {
+                const { q, m, f } = parseQMFKey(k);
+                return formatQMFKey(q, m, f);
+            }).join(' · ');
+
+            html += `<div style="grid-column: 1/-1; margin-top: 8px; padding: 10px 12px;
+                background: #f0f5fe; border: 1px solid #d0d9e8; border-radius: 12px;
+                font-size: 0.85rem; color: #334e6e;">
+                <b>💡 Distribuições mais frequentes:</b>
+                <span class="pi-highlight">${topStr}</span> —
+                os palpites vão seguir essas proporções em vez de usar 2Q+2M+2F fixo.
+            </div>`;
+            qmfContainer.innerHTML = html;
+        }
+
         function generatePalpites() {
-            if (results.length === 0) return;
-            const freq = getFrequencies();
-            // Criar lista ponderada: números com maior frequência têm mais chance
-            const weights = [];
-            for (let i = 1; i <= 60; i++) {
-                // Peso base + frequência
-                const f = freq[i] || 0;
-                weights.push({ numero: i, peso: 1 + f * 2 }); // ajuste simples
+            if (results.length === 0) {
+                alert('Adicione resultados primeiro.');
+                return;
             }
-
-            function pickWeighted(available) {
-                const totalWeight = available.reduce((sum, item) => sum + item.peso, 0);
-                let rand = Math.random() * totalWeight;
-                for (const item of available) {
-                    rand -= item.peso;
-                    if (rand <= 0) return item;
-                }
-                return available[available.length - 1];
-            }
-
-            const jogos = [];
-            for (let j = 0; j < 15; j++) {
-                const available = weights.map(w => ({ ...w }));
-                const jogo = [];
-                for (let k = 0; k < 6; k++) {
-                    const chosen = pickWeighted(available);
-                    jogo.push(chosen.numero);
-                    // remover escolhido da lista disponível
-                    const idx = available.findIndex(item => item.numero === chosen.numero);
-                    if (idx !== -1) available.splice(idx, 1);
-                }
-                jogos.push(sortNumbers(jogo));
-            }
+            const seedVal = Number(seedInput.value) || 12345;
+            setSeed(seedVal);
+            saveSeedToStorage();
+            const jogos = gerarPalpitesDe(results, QTD_PALPITES);
             lastGeneratedPalpites = jogos;
             savePalpitesToStorage();
             renderSuggestionList();
-            renderComparativo(); // atualizar comparação se já houver último resultado
+            renderComparativo();
+        }
+
+        // ─── NOVO: EXPORTAR PALPITES ───
+        function exportarPalpites() {
+            if (lastGeneratedPalpites.length === 0) {
+                alert('Gere palpites primeiro antes de exportar.');
+                return;
+            }
+
+            const seedVal = Number(seedInput.value) || 12345;
+            const agora = new Date();
+            const dataStr = agora.toLocaleDateString('pt-BR') + ' ' +
+                            agora.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+
+            let txt = '';
+            txt += '═══════════════════════════════════════════════════\n';
+            txt += '           MEGA-SENA · PALPITES GERADOS\n';
+            txt += '═══════════════════════════════════════════════════\n';
+            txt += `Data:              ${dataStr}\n`;
+            txt += `Seed utilizada:    ${seedVal}\n`;
+            txt += `Total de palpites: ${lastGeneratedPalpites.length}\n`;
+            txt += `Base estatística:  ${results.length} sorteios cadastrados\n`;
+            txt += '═══════════════════════════════════════════════════\n\n';
+
+            const cls = classifyNumbers();
+            const qSet = new Set(cls.quentes.map(x => x.numero));
+            const mSet = new Set(cls.mornos.map(x => x.numero));
+            const topPI = getTopPIPatterns();
+
+            lastGeneratedPalpites.forEach((jogo, index) => {
+                let qCount = 0, mCount = 0, fCount = 0;
+                jogo.forEach(n => {
+                    if (qSet.has(n)) qCount++;
+                    else if (mSet.has(n)) mCount++;
+                    else fCount++;
+                });
+
+                const soma = jogo.reduce((a, b) => a + b, 0);
+                const pi = getPI(jogo);
+                const isTopPI = topPI.includes(pi);
+                const numsStr = jogo.map(n => String(n).padStart(2, '0')).join('  ');
+
+                txt += `Jogo ${String(index + 1).padStart(2, '0')}:  ${numsStr}\n`;
+                txt += `         Composição: ${qCount}Q · ${mCount}M · ${fCount}F\n`;
+                txt += `         P/I:        ${pi}${isTopPI ? ' ★ (top)' : ''}\n`;
+                txt += `         Soma:       ${soma}\n`;
+                txt += '\n';
+            });
+
+            txt += '═══════════════════════════════════════════════════\n';
+            txt += 'Legenda:\n';
+            txt += '  Q = Quente   M = Morno   F = Frio\n';
+            txt += '  P = Par      I = Ímpar   ★ = padrão mais provável\n';
+            txt += '═══════════════════════════════════════════════════\n';
+
+            const blob = new Blob([txt], { type: 'text/plain;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            const dataArq = agora.toISOString().slice(0, 10);
+            a.download = `palpites_megasena_${dataArq}.txt`;
+            a.click();
+            URL.revokeObjectURL(url);
         }
 
         function renderSuggestionList() {
             if (lastGeneratedPalpites.length === 0) {
-                suggestion.innerHTML = '<span class="text-muted">Clique em "Gerar 15 palpites".</span>';
+                suggestion.innerHTML = '<span class="text-muted">Clique em "Gerar 10 palpites".</span>';
                 return;
             }
+            const cls = results.length > 0 ? classifyNumbers() : { quentes: [], mornos: [], frios: [] };
+            const qSet = new Set(cls.quentes.map(x => x.numero));
+            const mSet = new Set(cls.mornos.map(x => x.numero));
+            const topPI = getTopPIPatterns();
+
             let html = '<div class="palpites-grid">';
             lastGeneratedPalpites.forEach((jogo, index) => {
-                html += `<div class="palpite-item"><span class="nums">${formatNumbers(jogo)}</span> <span class="text-muted">Jogo ${index+1}</span></div>`;
+                let qCount = 0, mCount = 0, fCount = 0;
+                const numsHtml = jogo.map(n => {
+                    let ballCls = '';
+                    if (qSet.has(n)) { ballCls = 'hot-ball'; qCount++; }
+                    else if (mSet.has(n)) { ballCls = 'morno-ball'; mCount++; }
+                    else { ballCls = 'cold-ball'; fCount++; }
+                    return `<span class="mini-ball ${ballCls}">${String(n).padStart(2, '0')}</span>`;
+                }).join('');
+                const soma = jogo.reduce((a, b) => a + b, 0);
+                const pi = getPI(jogo);
+                const isTopPI = topPI.includes(pi);
+                const qmfLabel = `${qCount}Q·${mCount}M·${fCount}F`;
+
+                html += `<div class="palpite-item">
+                    <div class="nums">${numsHtml}</div>
+                    <div class="text-muted" style="font-size:0.72rem;margin-top:6px;
+                        display:flex;justify-content:space-between;align-items:center;gap:6px;flex-wrap:wrap;">
+                        <span>Jogo ${index + 1} · Soma ${soma}</span>
+                        <span style="display:flex;gap:4px;">
+                            <span class="qmf-badge" title="Quentes/Mornos/Frios">${qmfLabel}</span>
+                            <span class="pi-highlight" title="Pares/Ímpares">${pi}${isTopPI ? ' ★' : ''}</span>
+                        </span>
+                    </div>
+                </div>`;
             });
             html += '</div>';
             suggestion.innerHTML = html;
         }
 
-        // ─── Comparativo ───
         function renderComparativo() {
             if (results.length === 0) {
                 comparativoContainer.innerHTML = '<p class="text-muted">Adicione um resultado para comparar.</p>';
@@ -730,13 +1758,12 @@
             html += '<div class="comparativo-list">';
             lastGeneratedPalpites.forEach((jogo, index) => {
                 const acertos = jogo.filter(n => lastSet.has(n)).length;
-                html += `<div class="comparativo-item">Jogo ${index+1}: ${formatNumbers(jogo)} → <span class="acerto-count">${acertos} acerto(s)</span></div>`;
+                html += `<div class="comparativo-item">Jogo ${index + 1}: ${formatNumbers(jogo)} → <span class="acerto-count">${acertos} acerto(s)</span></div>`;
             });
             html += '</div>';
             comparativoContainer.innerHTML = html;
         }
 
-        // ─── Análise por faixa ───
         function renderRangeStats() {
             if (results.length === 0) {
                 rangeStats.innerHTML = '<p class="text-muted">Adicione resultados para ver a distribuição.</p>';
@@ -753,10 +1780,7 @@
             for (const r of results) {
                 for (const n of r.numeros) {
                     for (const faixa of faixas) {
-                        if (n >= faixa.min && n <= faixa.max) {
-                            faixa.count++;
-                            break;
-                        }
+                        if (n >= faixa.min && n <= faixa.max) { faixa.count++; break; }
                     }
                 }
             }
@@ -770,19 +1794,15 @@
             rangeStats.innerHTML = html;
         }
 
-        // ─── Números repetidos ───
         function renderRepeated() {
             if (results.length === 0) {
                 repeatedNumbers.innerHTML = '<p class="text-muted">Adicione resultados para verificar repetições.</p>';
                 return;
             }
-            // Para Mega-Sena não há repetição no mesmo sorteio, então apenas informamos.
             repeatedNumbers.innerHTML = '<p class="text-muted">Não há números repetidos no mesmo sorteio (regra da Mega-Sena).</p>';
         }
 
-        // ─── IMPORTAÇÃO AVANÇADA ───
         function parseMegaSenaLine(line) {
-            // Tenta o formato: "Concurso: 1 | Data: 10/03/1996 | Números: 4 5 30 33 41 52"
             const match = line.match(/Concurso:\s*(\d+)\s*\|\s*Data:.*?\|\s*Números:\s*([\d\s]+)/);
             if (match) {
                 const concurso = match[1];
@@ -791,8 +1811,6 @@
                     return { concurso, numeros: sortNumbers(numsStr) };
                 }
             }
-
-            // Fallback: formato antigo separado por ';' (N1;N2;...)
             const parts = line.split(';');
             if (parts.length >= 6) {
                 const nums = parts.slice(0, 6).map(n => Number(n.trim()));
@@ -801,8 +1819,6 @@
                     return { concurso, numeros: sortNumbers(nums) };
                 }
             }
-
-            // Se não reconheceu, retorna null
             return null;
         }
 
@@ -810,35 +1826,13 @@
             const reader = new FileReader();
             reader.onload = (ev) => {
                 const content = ev.target.result;
-                const lines = content.split('\n')
-                    .map(line => line.trim())
-                    .filter(line => line.length > 0);
-
-                if (lines.length === 0) {
-                    alert('Arquivo vazio.');
-                    return;
-                }
-
-                // Tenta detectar se é o formato Mega-Sena (primeira linha contém "Concurso:")
-                const isMegaFormat = lines.some(line => /Concurso:\s*\d/.test(line));
+                const lines = content.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+                if (lines.length === 0) { alert('Arquivo vazio.'); return; }
 
                 let newResults = [];
                 for (const line of lines) {
                     const parsed = parseMegaSenaLine(line);
-                    if (parsed) {
-                        newResults.push(parsed);
-                    } else if (!isMegaFormat) {
-                        // Se não for formato Mega, tenta interpretar como CSV simples (sem cabeçalho)
-                        // Exemplo: "4;5;30;33;41;52;1" (concurso opcional)
-                        const parts = line.split(';');
-                        if (parts.length >= 6) {
-                            const nums = parts.slice(0, 6).map(n => Number(n.trim()));
-                            if (nums.every(isValidNumber) && new Set(nums).size === 6) {
-                                const concurso = parts.length > 6 ? parts[6].trim() : '';
-                                newResults.push({ concurso, numeros: sortNumbers(nums) });
-                            }
-                        }
-                    }
+                    if (parsed) newResults.push(parsed);
                 }
 
                 if (newResults.length === 0) {
@@ -846,7 +1840,6 @@
                     return;
                 }
 
-                // Adiciona ao final da lista
                 results = results.concat(newResults);
                 saveToStorage();
                 renderAll();
@@ -856,13 +1849,9 @@
             reader.readAsText(file);
         }
 
-        // ─── Eventos ───
         addBtn.addEventListener('click', () => {
             const nums = getNumbersFromInputs();
-            if (!nums) {
-                alert('Insira 6 números válidos (1 a 60) e sem repetição.');
-                return;
-            }
+            if (!nums) { alert('Insira 6 números válidos (1 a 60) e sem repetição.'); return; }
             const concurso = concursoInput.value.trim() || '';
             results.push({ concurso, numeros: nums });
             saveToStorage();
@@ -873,8 +1862,13 @@
         clearAllBtn.addEventListener('click', () => {
             if (confirm('Tem certeza que deseja apagar todos os resultados?')) {
                 results = [];
+                lastGeneratedPalpites = [];
                 saveToStorage();
+                savePalpitesToStorage();
                 renderAll();
+                renderSuggestionList();
+                backtestContainer.innerHTML = '<p class="text-muted">Clique em "Analisar histórico" para ver os resultados.</p>';
+                backtestStatus.textContent = '';
             }
         });
 
@@ -884,18 +1878,28 @@
                 saveToStorage();
                 lastDeleted = null;
                 renderAll();
-            } else {
-                alert('Nada para desfazer.');
-            }
+            } else alert('Nada para desfazer.');
         });
 
         generateSuggestionBtn.addEventListener('click', generatePalpites);
+        exportPalpitesBtn.addEventListener('click', exportarPalpites);
+        runBacktestBtn.addEventListener('click', runBacktest);
+        runMultiSeedBtn.addEventListener('click', runMultiSeedBacktest);
+
+        seedInput.addEventListener('change', () => {
+            const v = Number(seedInput.value) || 12345;
+            setSeed(v);
+            saveSeedToStorage();
+        });
+        randomSeedBtn.addEventListener('click', () => {
+            const s = Math.floor(Math.random() * 999999) + 1;
+            seedInput.value = s;
+            setSeed(s);
+            saveSeedToStorage();
+        });
 
         exportBtn.addEventListener('click', () => {
-            if (results.length === 0) {
-                alert('Não há resultados para exportar.');
-                return;
-            }
+            if (results.length === 0) { alert('Não há resultados para exportar.'); return; }
             let txt = 'Concurso;N1;N2;N3;N4;N5;N6\n';
             for (const r of results) {
                 const nums = r.numeros.map(n => String(n).padStart(2, '0')).join(';');
@@ -904,9 +1908,7 @@
             const blob = new Blob([txt], { type: 'text/plain' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
-            a.href = url;
-            a.download = 'resultados_megasena.txt';
-            a.click();
+            a.href = url; a.download = 'resultados_megasena.txt'; a.click();
             URL.revokeObjectURL(url);
         });
 
@@ -917,7 +1919,6 @@
             handleImportFile(file);
         });
 
-        // Inicialização
         loadFromStorage();
         renderAll();
         renderSuggestionList();
